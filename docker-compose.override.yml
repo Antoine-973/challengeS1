@@ -2,6 +2,19 @@ version: "3.4"
 
 # Development environment override
 services:
+  vue:
+    image: node:lts-alpine
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./front:/home/node/front
+    #      - /home/node/front/node_modules
+    working_dir: /home/node/front
+    container_name: front
+    environment:
+      - PORT=3000
+    command: sh -c "npm install && npm run dev"
+  
   php:
     build:
       target: app_php_dev
@@ -47,3 +60,15 @@ services:
 
 ###> symfony/mercure-bundle ###
 ###< symfony/mercure-bundle ###
+
+  pgadmin:
+    container_name: pgAdmin
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
+    depends_on:
+      - database

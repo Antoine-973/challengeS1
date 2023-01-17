@@ -1,6 +1,19 @@
 version: "3.4"
 
 services:
+  vue:
+    image: node:lts-alpine
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./front:/home/node/front
+    #      - /home/node/front/node_modules
+    working_dir: /home/node/front
+    container_name: front
+    environment:
+      - PORT=3000
+    command: sh -c "npm install && npm run dev"
+  
   php:
     build:
       context: ./api

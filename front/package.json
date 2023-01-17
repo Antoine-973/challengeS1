@@ -12,6 +12,7 @@
   "dependencies": {
     "daisyui": "^2.47.0",
     "pinia": "^2.0.28",
+    "vite-plugin-eslint": "^1.8.1",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },
