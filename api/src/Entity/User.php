@@ -12,8 +12,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Controller\RegisterCustomController;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use App\State\UserPasswordHasher;
@@ -23,10 +22,19 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
+
 #[ApiResource(
     operations: [
         new GetCollection(),
         new Post(processor: UserPasswordHasher::class),
+        new Post(
+            uriTemplate: '/api/register',
+            controller: RegisterCustomController::class,
+            normalizationContext: ['groups' => 'user:register:read'],
+            denormalizationContext: ['groups' => 'user:register:create'],
+            name: 'registerUser',
+            processor: UserPasswordHasher::class
+        ),
         new Get(),
         new Put(processor: UserPasswordHasher::class),
         new Patch(processor: UserPasswordHasher::class),
@@ -48,7 +56,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Assert\NotBlank]
     #[Assert\Email]
-    #[Groups(['user:read', 'user:create', 'user:update'])]
+    #[Groups(['user:read', 'user:create', 'user:update','user:register:read'])]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
