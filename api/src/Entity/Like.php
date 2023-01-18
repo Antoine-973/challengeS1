@@ -5,10 +5,14 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\LikeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: LikeRepository::class)]
 #[ORM\Table(name: '`like`')]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['like:read']],
+    denormalizationContext: ['groups' => ['like:create', 'like:update']],
+)]
 class Like
 {
     #[ORM\Id]
@@ -17,17 +21,21 @@ class Like
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['like:read'])]
     private ?bool $isPending = true;
 
     #[ORM\Column]
+    #[Groups(['like:read'])]
     private ?bool $isValidate = false;
-
+    
     #[ORM\ManyToOne(inversedBy: 'likes')]
+    #[Groups(['like:read'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'likes')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['like:read'])]
     private ?Animal $animal_id = null;
 
     public function getId(): ?int
