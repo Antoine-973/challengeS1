@@ -7,6 +7,7 @@ use App\Repository\AnimalRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AnimalRepository::class)]
@@ -19,13 +20,12 @@ class Animal
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['like:read'])]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $age = null;
-
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $dateOfBirth = null;
+    #[Groups(['like:read'])]
+    private ?\DateTimeInterface $birthday = null;
 
     #[ORM\Column(length: 255)]
     private ?string $birthLocation = null;
@@ -34,6 +34,7 @@ class Animal
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['like:read'])]
     private ?string $picture = null;
 
     #[ORM\Column]
@@ -75,26 +76,14 @@ class Animal
         return $this;
     }
 
-    public function getAge(): ?string
+    public function getBirthday()
     {
-        return $this->age;
+        return $this->birthday;
     }
 
-    public function setAge(string $age): self
+    public function setBirthday($birthday)
     {
-        $this->age = $age;
-
-        return $this;
-    }
-
-    public function getDateOfBirth(): ?\DateTimeInterface
-    {
-        return $this->dateOfBirth;
-    }
-
-    public function setDateOfBirth(\DateTimeInterface $dateOfBirth): self
-    {
-        $this->dateOfBirth = $dateOfBirth;
+        $this->birthday = $birthday;
 
         return $this;
     }
