@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Controller\RegisterCustomController;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use App\State\UserPasswordHasher;
@@ -21,10 +22,17 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
+
 #[ApiResource(
     operations: [
         new GetCollection(),
         new Post(processor: UserPasswordHasher::class),
+        new Post(
+            uriTemplate: '/api/register',
+            controller: RegisterCustomController::class,
+            name: 'registerUser',
+            processor: UserPasswordHasher::class
+        ),
         new Get(),
         new Put(processor: UserPasswordHasher::class),
         new Patch(processor: UserPasswordHasher::class),
