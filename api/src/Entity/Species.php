@@ -24,10 +24,10 @@ class Species
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[ORM\OneToMany(mappedBy: 'species_id', targetEntity: Animal::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'species', targetEntity: Animal::class, orphanRemoval: true)]
     private Collection $animals;
 
-    #[ORM\OneToMany(mappedBy: 'species_id', targetEntity: Breed::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'species', targetEntity: Breed::class, orphanRemoval: true)]
     private Collection $breeds;
 
     public function __construct()
@@ -107,7 +107,7 @@ class Species
     {
         if (!$this->breeds->contains($breed)) {
             $this->breeds->add($breed);
-            $breed->setSpeciesId($this);
+            $breed->setSpecies($this);
         }
 
         return $this;
@@ -117,8 +117,8 @@ class Species
     {
         if ($this->breeds->removeElement($breed)) {
             // set the owning side to null (unless already changed)
-            if ($breed->getSpeciesId() === $this) {
-                $breed->setSpeciesId(null);
+            if ($breed->getSpecies() === $this) {
+                $breed->setSpecies(null);
             }
         }
 

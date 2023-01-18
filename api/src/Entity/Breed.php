@@ -24,7 +24,7 @@ class Breed
 
     #[ORM\ManyToOne(inversedBy: 'breeds')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Species $species_id = null;
+    private ?Species $species = null;
 
     public function getId(): ?int
     {
@@ -55,14 +55,14 @@ class Breed
         return $this;
     }
 
-    public function getSpeciesId(): ?Species
+    public function getSpecies(): ?Species
     {
-        return $this->species_id;
+        return $this->species;
     }
 
-    public function setSpeciesId(?Species $species_id): self
+    public function setSpecies(?Species $species): self
     {
-        $this->species_id = $species_id;
+        $this->species = $species;
 
         return $this;
     }

@@ -40,15 +40,12 @@ class Animal
     #[ORM\Column]
     private ?bool $isSterilize = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $disease = null;
-
-    #[ORM\OneToMany(mappedBy: 'animal_id', targetEntity: Like::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'animal', targetEntity: Like::class, orphanRemoval: true)]
     private Collection $likes;
 
     #[ORM\ManyToOne(inversedBy: 'animals')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Species $species_id = null;
+    private ?Species $species = null;
 
     #[ORM\ManyToMany(targetEntity: Behaviour::class, mappedBy: 'animal_id')]
     private Collection $behaviours;
@@ -112,18 +109,6 @@ class Animal
         return $this;
     }
 
-    public function getPicture(): ?string
-    {
-        return $this->picture;
-    }
-
-    public function setPicture(string $picture): self
-    {
-        $this->picture = $picture;
-
-        return $this;
-    }
-
     public function isIsSterilize(): ?bool
     {
         return $this->isSterilize;
@@ -132,18 +117,6 @@ class Animal
     public function setIsSterilize(bool $isSterilize): self
     {
         $this->isSterilize = $isSterilize;
-
-        return $this;
-    }
-
-    public function getDisease(): ?string
-    {
-        return $this->disease;
-    }
-
-    public function setDisease(string $disease): self
-    {
-        $this->disease = $disease;
 
         return $this;
     }
@@ -180,12 +153,12 @@ class Animal
 
     public function getSpeciesId(): ?Species
     {
-        return $this->species_id;
+        return $this->species;
     }
 
-    public function setSpeciesId(?Species $species_id): self
+    public function setSpeciesId(?Species $species): self
     {
-        $this->species_id = $species_id;
+        $this->species = $species;
 
         return $this;
     }

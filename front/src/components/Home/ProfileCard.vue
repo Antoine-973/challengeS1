@@ -12,7 +12,7 @@ import calculateAge from "../../helper/calculateAge";
             disease : null,
             description : "MIAAAAAAAAAAAAAAAOU",
             spa : {
-                name : "SPA de la rue de la paix",
+                name : "Spa de la rue de la paix",
                 address : "12 rue de la paix",
                 city : "Paris",
                 postalCode : "75000",
@@ -32,7 +32,7 @@ import calculateAge from "../../helper/calculateAge";
         },
         {
             id: 2,
-            name: "Serra",
+            name: "Séra",
             dateOfBirth: new Date(2021, 6, 1),
             birthLocation: "La Street",
             isSterilize: true,
@@ -40,7 +40,7 @@ import calculateAge from "../../helper/calculateAge";
             description: "MIAAAAAAAAAAAAAAAOU2",
             spa: {
                 id: 1,
-                name: "SPA de la rue de la paix",
+                name: "Spa de la rue de la paix",
                 address: "12 rue de la paix",
                 city: "Paris",
                 postalCode: "75000",

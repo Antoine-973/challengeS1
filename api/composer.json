@@ -9,6 +9,7 @@
         "doctrine/doctrine-bundle": "^2.7",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.12",
+        "fakerphp/faker": "^1.21",
         "lexik/jwt-authentication-bundle": "^2.16",
         "nelmio/cors-bundle": "^2.2",
         "phpdocumentor/reflection-docblock": "^5.3",
@@ -31,6 +32,7 @@
     },
     "require-dev": {
         "api-platform/schema-generator": "^5.0",
+        "doctrine/doctrine-fixtures-bundle": "^3.4",
         "symfony/browser-kit": "6.2.*",
         "symfony/css-selector": "6.2.*",
         "symfony/debug-bundle": "6.2.*",
@@ -38,7 +40,8 @@
         "symfony/phpunit-bridge": "6.2.*",
         "symfony/stopwatch": "6.2.*",
         "symfony/var-dumper": "6.2.*",
-        "symfony/web-profiler-bundle": "6.2.*"
+        "symfony/web-profiler-bundle": "6.2.*",
+        "zenstruck/foundry": "^1.27"
     },
     "config": {
         "optimize-autoloader": true,

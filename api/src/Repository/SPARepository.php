@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\SPA;
+use App\Entity\Spa;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<SPA>
+ * @extends ServiceEntityRepository<Spa>
  *
- * @method SPA|null find($id, $lockMode = null, $lockVersion = null)
- * @method SPA|null findOneBy(array $criteria, array $orderBy = null)
- * @method SPA[]    findAll()
- * @method SPA[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Spa|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Spa|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Spa[]    findAll()
+ * @method Spa[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class SPARepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, SPA::class);
+        parent::__construct($registry, Spa::class);
     }
 
-    public function save(SPA $entity, bool $flush = false): void
+    public function save(Spa $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class SPARepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(SPA $entity, bool $flush = false): void
+    public function remove(Spa $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class SPARepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return SPA[] Returns an array of SPA objects
+//     * @return Spa[] Returns an array of Spa objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class SPARepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?SPA
+//    public function findOneBySomeField($value): ?Spa
 //    {
 //        return $this->createQueryBuilder('s')
 //            ->andWhere('s.exampleField = :val')
