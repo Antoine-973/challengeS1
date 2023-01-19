@@ -1,8 +1,22 @@
 <script setup >
 
 import UserForm from "../../components/form/UserForm.vue";
-const register = (data) => {
-    console.log(data);
+const register = async (data) => {
+
+    try {
+        const response = await fetch('https://localhost/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        const json = await response.json();
+        console.log(json);
+    } catch (e) {
+        console.log(e);
+    }
+
 }
 
 

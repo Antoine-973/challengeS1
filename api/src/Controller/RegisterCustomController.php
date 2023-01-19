@@ -12,15 +12,19 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use App\Repository\UserRepository;
 
 #[AsController]
-class RegisterCustomController extends AbstractController
-{
+class RegisterCustomController extends AbstractController {
+
     private $em ;
     private $emailServices ;
-    public function __construct(EntityManagerInterface $entityManager, EmailService $emailService) {
+    private$userRepository ;
+
+    public function __construct (EntityManagerInterface $entityManager, EmailService $emailService, UserRepository $userRepository) {
         $this->em = $entityManager ;
         $this->emailServices = $emailService ;
+        $this->userRepository = $userRepository ;
     }
 
     /**
@@ -28,6 +32,11 @@ class RegisterCustomController extends AbstractController
      */
     public function __invoke(User $user): User
     {
+
+        if($this->userRepository->findOneBy(['email' => $user->getEmail()])) {
+            return $user;
+        }
+
         $token = $this->generateToken() ;
 
         $user->setConfirmAccount($token) ;

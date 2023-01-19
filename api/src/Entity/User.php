@@ -79,20 +79,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private array $roles = [];
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create','like:read'])]
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:create','user:read', 'user:update', 'user:register:read','user:register:create','like:read'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create','like:read'])]
+    #[Groups(['user:create','user:read', 'user:update', 'user:register:read','user:register:create','like:read'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create', 'user:read'])]
+    #[Groups(['user:create','user:read', 'user:update', 'user:register:read','user:register:create'])]
     private ?string $city = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create', 'user:read'])]
+    #[Groups(['user:create','user:read', 'user:update', 'user:register:read','user:register:create'])]
     private ?string $description = null;
+
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['user:update', 'user:read'])]
@@ -100,6 +103,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Groups(['user:read'])]
     #[ORM\Column]
+    #[Groups(['user:update','user:read'])]
     private ?bool $isSubscriber = false;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -113,17 +117,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $resetPassword = null;
 
-    #[Groups(['user:read'])]
-    #[ORM\ManyToOne(inversedBy: 'users')]
-    private ?Spa $spa = null;
-
-    #[Groups(['user:read'])]
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Like::class, orphanRemoval: true)]
+    #[Groups(['user:read',  'user:update'])]
     private Collection $likes;
 
-    #[Groups(['user:read'])]
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Donation::class)]
+    #[Groups(['user:read',  'user:update'])]
     private Collection $donations;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Review::class)]
+    #[Groups(['user:read', 'user:update'])]
+    private ?Spa $spa = null;
 
     #[Groups(['user:read'])]
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Agenda::class)]
