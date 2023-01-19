@@ -13,14 +13,11 @@ use ApiPlatform\Metadata\Put;
 use App\Controller\ConfirmAccountController;
 use App\Controller\RegisterCustomController;
 use cebe\openapi\spec\Parameter;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection ;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use App\State\UserPasswordHasher;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -89,19 +86,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create','like:read'])]
     private ?string $lastname = null;
 
-    #[Groups(['user:read'])]
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create'])]
+    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create', 'user:read'])]
     private ?string $city = null;
 
-    #[Groups(['user:read'])]
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create'])]
+    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create', 'user:read'])]
     private ?string $description = null;
 
-    #[Groups(['user:read'])]
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:update'])]
+    #[Groups(['user:update', 'user:read'])]
     private ?string $picture = null;
 
     #[Groups(['user:read'])]
