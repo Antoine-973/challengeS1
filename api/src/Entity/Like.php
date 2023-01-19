@@ -18,16 +18,17 @@ class Like
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['like:read', 'like:update'])]
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Groups(['like:read'])]
+    #[Groups(['like:read', 'like:update'])]
     private ?bool $isPending = true;
 
     #[ORM\Column]
-    #[Groups(['like:read'])]
+    #[Groups(['like:read', 'like:update', 'like_get'])]
     private ?bool $isValidate = false;
-    
+
     #[ORM\ManyToOne(inversedBy: 'likes')]
     #[Groups(['like:read'])]
     #[ORM\JoinColumn(nullable: false)]

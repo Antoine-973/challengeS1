@@ -71,12 +71,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['like:read'])]
     private ?string $city = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['like:read'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['like:read'])]
     private ?string $picture = null;
 
     #[ORM\Column]

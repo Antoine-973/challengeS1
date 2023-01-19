@@ -28,9 +28,11 @@ class Animal
     private ?\DateTimeInterface $birthday = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['like:read'])]
     private ?string $birthLocation = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['like:read'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
