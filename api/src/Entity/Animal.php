@@ -33,10 +33,6 @@ class Animal
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 255)]
-    #[Groups(['like:read'])]
-    private ?string $picture = null;
-
     #[ORM\Column]
     private ?bool $isSterilize = null;
 
@@ -47,13 +43,27 @@ class Animal
     #[ORM\JoinColumn(nullable: false)]
     private ?Species $species = null;
 
-    #[ORM\ManyToMany(targetEntity: Behaviour::class, mappedBy: 'animal_id')]
+    #[ORM\Column(type: Types::SMALLINT)]
+    private ?int $sex = null;
+
+    #[ORM\ManyToMany(targetEntity: Breed::class, inversedBy: 'animals')]
+    private Collection $breeds;
+
+    #[ORM\ManyToOne(inversedBy: 'animals')]
+    private ?Spa $spa = null;
+
+    #[ORM\ManyToMany(targetEntity: Behaviour::class, inversedBy: 'animals')]
     private Collection $behaviours;
+
+    #[ORM\OneToMany(mappedBy: 'animal', targetEntity: AnimalPicture::class, orphanRemoval: true)]
+    private Collection $animalPictures;
 
     public function __construct()
     {
         $this->likes = new ArrayCollection();
+        $this->breeds = new ArrayCollection();
         $this->behaviours = new ArrayCollection();
+        $this->animalPictures = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -151,14 +161,62 @@ class Animal
         return $this;
     }
 
-    public function getSpeciesId(): ?Species
+    public function getSpecies(): ?Species
     {
         return $this->species;
     }
 
-    public function setSpeciesId(?Species $species): self
+    public function setSpecies(?Species $species): self
     {
         $this->species = $species;
+
+        return $this;
+    }
+
+    public function getSex(): ?int
+    {
+        return $this->sex;
+    }
+
+    public function setSex(int $sex): self
+    {
+        $this->sex = $sex;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Breed>
+     */
+    public function getBreeds(): Collection
+    {
+        return $this->breeds;
+    }
+
+    public function addBreed(Breed $breed): self
+    {
+        if (!$this->breeds->contains($breed)) {
+            $this->breeds->add($breed);
+        }
+
+        return $this;
+    }
+
+    public function removeBreed(Breed $breed): self
+    {
+        $this->breeds->removeElement($breed);
+
+        return $this;
+    }
+
+    public function getSpa(): ?Spa
+    {
+        return $this->spa;
+    }
+
+    public function setSpa(?Spa $spa): self
+    {
+        $this->spa = $spa;
 
         return $this;
     }
@@ -175,7 +233,6 @@ class Animal
     {
         if (!$this->behaviours->contains($behaviour)) {
             $this->behaviours->add($behaviour);
-            $behaviour->addAnimalId($this);
         }
 
         return $this;
@@ -183,8 +240,36 @@ class Animal
 
     public function removeBehaviour(Behaviour $behaviour): self
     {
-        if ($this->behaviours->removeElement($behaviour)) {
-            $behaviour->removeAnimalId($this);
+        $this->behaviours->removeElement($behaviour);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, AnimalPicture>
+     */
+    public function getAnimalPictures(): Collection
+    {
+        return $this->animalPictures;
+    }
+
+    public function addAnimalPicture(AnimalPicture $animalPicture): self
+    {
+        if (!$this->animalPictures->contains($animalPicture)) {
+            $this->animalPictures->add($animalPicture);
+            $animalPicture->setAnimal($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnimalPicture(AnimalPicture $animalPicture): self
+    {
+        if ($this->animalPictures->removeElement($animalPicture)) {
+            // set the owning side to null (unless already changed)
+            if ($animalPicture->getAnimal() === $this) {
+                $animalPicture->setAnimal(null);
+            }
         }
 
         return $this;

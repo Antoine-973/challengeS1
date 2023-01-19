@@ -24,7 +24,7 @@ class Behaviour
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[ORM\ManyToMany(targetEntity: Animal::class, inversedBy: 'behaviours')]
+    #[ORM\ManyToMany(targetEntity: Animal::class, mappedBy: 'behaviours')]
     private Collection $animals;
 
     public function __construct()
@@ -71,16 +71,19 @@ class Behaviour
 
     public function addAnimal(Animal $animal): self
     {
-        if (!$this->$animal->contains($animal)) {
+        if (!$this->animals->contains($animal)) {
             $this->animals->add($animal);
+            $animal->addBehaviour($this);
         }
 
         return $this;
     }
 
-    public function removeAnimalId(Animal $animal): self
+    public function removeAnimal(Animal $animal): self
     {
-        $this->animals->removeElement($animal);
+        if ($this->animals->removeElement($animal)) {
+            $animal->removeBehaviour($this);
+        }
 
         return $this;
     }

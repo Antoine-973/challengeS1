@@ -2,63 +2,129 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\User;
+use App\Entity\Animal;
+use App\Entity\Behaviour;
+use App\Entity\Breed;
+use App\Entity\Spa;
+use App\Entity\Species;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Faker\Factory;
 
-class AnimalFixtures extends Fixture
+class AnimalFixtures extends Fixture implements DependentFixtureInterface
 {
-    const USER_ADMIN = 'ADMIN';
-    const USER_USER = 'USER';
-    const USER_MEMBER_SPA = 'USER_MEMBER_SPA';
-
-    /** @var UserPasswordHasherInterface $userPasswordHasher */
-    private UserPasswordHasherInterface $userPasswordHasher;
-
-    public function __construct(UserPasswordHasherInterface $userPasswordHasher){
-        $this->userPasswordHasher = $userPasswordHasher;
-    }
-
     public function load(ObjectManager $manager): void
     {
+        $dog = $manager->getRepository(Species::class)->findOneBy(['name' => 'Chien']);
+        $cairnTerrier = $manager->getRepository(Breed::class)->findOneBy(['name' => 'Cairn Terrier']);
+        $behaviours = $manager->getRepository(Behaviour::class)->findAll();
+        $spas = $manager->getRepository(Spa::class)->findAll();
+        $faker = Factory::create('fr_FR');
 
-        $admin = (new User())
-            ->setEmail('admin@spa.com')
-            ->setRoles(['ROLE_ADMIN'])
-            ->setIsVerified(true)
-            ->setLastname('SPA')
-            ->setFirstname('Admin')
-            ->setDescription('Hi ! I am the CEO of spa')
-        ;
-        $admin->setPassword($this->userPasswordHasher->hashPassword($admin, 'test'));
-        $manager->persist($admin);
-        $this->setReference(self::USER_ADMIN, $admin);
+        $adibou = (new Animal())
+            ->setName('Adibou')
+            ->setBirthday(new \DateTime('2005-01-20'))
+            ->setDescription("Adibou le plus beau des chiens")
+            ->setIsSterilize(false)
+            ->setBirthLocation('Bretagne')
+            ->setSex(1)
+            ->setSpecies($dog)
+            ->setSpa($faker->randomElement($spas))
+            ->addBreed($cairnTerrier);
 
-        $user = (new User())
-            ->setEmail('user@user.com')
-            ->setRoles(['ROLE_USER'])
-            ->setIsVerified(true)
-            ->setLastname('Doe')
-            ->setFirstname('John')
-            ->setDescription('Hi ! I am a user of spadoption !')
-        ;
-        $user->setPassword($this->userPasswordHasher->hashPassword($user, 'test'));
-        $manager->persist($user);
-        $this->setReference(self::USER_USER, $user);
+        $adibouBehaviours = $faker->randomElements($behaviours, 3);
+        foreach ($adibouBehaviours as $adibouBehaviour) {
+            $adibou->addBehaviour($adibouBehaviour);
+        }
 
-        $spaMember = (new User())
-            ->setEmail('user@spa.com')
-            ->setRoles(['ROLE_USER'])
-            ->setIsVerified(true)
-            ->setLastname('Doe')
-            ->setFirstname('John')
-            ->setDescription('Hi ! I am a member of the spa !')
-        ;
-        $spaMember->setPassword($this->userPasswordHasher->hashPassword($spaMember, 'test'));
-        $manager->persist($spaMember);
-        $this->setReference(self::USER_MEMBER_SPA, $spaMember);
+        $manager->persist($adibou);
+
+        $cat = $manager->getRepository(Species::class)->findOneBy(['name' => 'Chat']);
+        $crossbreed = $manager->getRepository(Breed::class)->findOneBy(['name' => 'Croise / Autre']);
+
+        $socrate = (new Animal())
+            ->setName('Socrate')
+            ->setBirthday(new \DateTime('2021-06-01'))
+            ->setDescription("Socrate le plus beau des chats")
+            ->setIsSterilize(false)
+            ->setBirthLocation('La street')
+            ->setSex(1)
+            ->setSpecies($cat)
+            ->setSpa($faker->randomElement($spas))
+            ->addBreed($crossbreed);
+
+        $socrateBehaviours = $faker->randomElements($behaviours, 3);
+        foreach ($socrateBehaviours as $socrateBehaviour) {
+            $socrate->addBehaviour($socrateBehaviour);
+        }
+
+        $manager->persist($socrate);
+
+        $sera = (new Animal())
+            ->setName('Séra')
+            ->setBirthday(new \DateTime('2021-06-01'))
+            ->setDescription("Sera le plus beau des chates")
+            ->setIsSterilize(false)
+            ->setBirthLocation('La street')
+            ->setSex(1)
+            ->setSpecies($cat)
+            ->setSpa($faker->randomElement($spas))
+            ->addBreed($crossbreed);
+
+        $seraBehaviours = $faker->randomElements($behaviours, 3);
+        foreach ($seraBehaviours as $seraBehaviour) {
+            $sera->addBehaviour($seraBehaviour);
+        }
+
+        $manager->persist($sera);
+
+        $species = $manager->getRepository(Species::class)->findAll();
+
+        for($i = 0; $i < 23; $i++) {
+            $animalSpecies = $faker->randomElement($species);
+            $breeds = $animalSpecies->getBreeds();
+            if (count($breeds) >= 2){
+                $animalBreeds = $faker->randomElements($breeds, 2);
+            }
+            else {
+                $animalBreeds = $faker->randomElement($breeds);
+            }
+
+            $animal = (new Animal())
+                ->setName($faker->firstName)
+                ->setBirthday($faker->dateTimeBetween('-10 years', '-1 years'))
+                ->setDescription($faker->text(200))
+                ->setIsSterilize($faker->boolean)
+                ->setBirthLocation($faker->city)
+                ->setSex($faker->numberBetween(1, 2))
+                ->setSpecies($faker->randomElement($species))
+                ->setSpa($faker->randomElement($spas));
+
+            foreach ($animalBreeds as $animalBreed) {
+                $animal->addBreed($animalBreed);
+            }
+
+            $animalBehaviours = $faker->randomElements($behaviours, 3);
+            foreach ($animalBehaviours as $animalBehaviour) {
+                $animal->addBehaviour($animalBehaviour);
+            }
+
+            $manager->persist($animal);
+        }
 
         $manager->flush();
+
+    }
+
+
+    public function getDependencies() : array
+    {
+        return [
+            SpeciesFixtures::class,
+            BreedFixtures::class,
+            BehaviourFixtures::class,
+            SpaFixtures::class,
+        ];
     }
 }

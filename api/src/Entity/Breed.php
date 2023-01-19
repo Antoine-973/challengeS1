@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\BreedRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -25,6 +27,14 @@ class Breed
     #[ORM\ManyToOne(inversedBy: 'breeds')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Species $species = null;
+
+    #[ORM\ManyToMany(targetEntity: Animal::class, mappedBy: 'breeds')]
+    private Collection $animals;
+
+    public function __construct()
+    {
+        $this->animals = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -63,6 +73,33 @@ class Breed
     public function setSpecies(?Species $species): self
     {
         $this->species = $species;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Animal>
+     */
+    public function getAnimals(): Collection
+    {
+        return $this->animals;
+    }
+
+    public function addAnimal(Animal $animal): self
+    {
+        if (!$this->animals->contains($animal)) {
+            $this->animals->add($animal);
+            $animal->addBreed($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnimal(Animal $animal): self
+    {
+        if ($this->animals->removeElement($animal)) {
+            $animal->removeBreed($this);
+        }
 
         return $this;
     }

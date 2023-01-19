@@ -321,14 +321,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getSpaId(): ?SPA
+    public function getSpa(): ?Spa
     {
-        return $this->spa_id;
+        return $this->spa;
     }
 
-    public function setSpaId(?SPA $spa_id): self
+    public function setSpa(?Spa $spa): self
     {
-        $this->spa_id = $spa_id;
+        $this->spa = $spa;
 
         return $this;
     }

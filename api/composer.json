@@ -41,7 +41,6 @@
         "symfony/stopwatch": "6.2.*",
         "symfony/var-dumper": "6.2.*",
         "symfony/web-profiler-bundle": "6.2.*",
-        "zenstruck/foundry": "^1.27"
     },
     "config": {
         "optimize-autoloader": true,

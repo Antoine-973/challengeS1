@@ -48,11 +48,15 @@ class Spa
     #[ORM\Column(length: 255)]
     private ?string $zipCode = null;
 
+    #[ORM\OneToMany(mappedBy: 'spa', targetEntity: Animal::class)]
+    private Collection $animals;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->agendas = new ArrayCollection();
         $this->reviews = new ArrayCollection();
+        $this->animals = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -230,6 +234,36 @@ class Spa
     public function setZipCode(string $zipCode): self
     {
         $this->zipCode = $zipCode;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Animal>
+     */
+    public function getAnimals(): Collection
+    {
+        return $this->animals;
+    }
+
+    public function addAnimal(Animal $animal): self
+    {
+        if (!$this->animals->contains($animal)) {
+            $this->animals->add($animal);
+            $animal->setSpa($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnimal(Animal $animal): self
+    {
+        if ($this->animals->removeElement($animal)) {
+            // set the owning side to null (unless already changed)
+            if ($animal->getSpa() === $this) {
+                $animal->setSpa(null);
+            }
+        }
 
         return $this;
     }
