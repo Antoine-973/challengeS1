@@ -72,10 +72,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
-
-    #[ORM\Column]
-    private ?string $password = null;
-
     #[Assert\NotBlank(groups: ['user:create'])]
     #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create'])]
     private ?string $plainPassword = null;
@@ -84,11 +80,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private array $roles = [];
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:create','user:read', 'user:update', 'user:register:read','user:register:create'])]
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:create','user:read', 'user:update', 'user:register:read','user:register:create','like:read'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:create','user:read', 'user:update', 'user:register:read','user:register:create'])]
+    #[Groups(['user:create','user:read', 'user:update', 'user:register:read','user:register:create','like:read'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -229,8 +227,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->plainPassword = null;
     }
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 5e52fe0271fce227af399fd8763d1289ba74f8b6
     public function getFirstname(): ?string
     {
         return $this->firstname;
