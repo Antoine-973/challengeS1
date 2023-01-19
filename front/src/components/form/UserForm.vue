@@ -1,5 +1,5 @@
 <script setup>
-import {reactive, defineProps} from "vue";
+import {reactive, defineProps, ref, inject} from "vue";
 
 const props = defineProps({
     submit: {
@@ -17,30 +17,74 @@ const user = reactive({
     firstname: '',
     lastname: '',
     birthdate: '',
-    password: '',
+    plainPassword: '',
     confirmPassword: '',
     email: '',
     roles: []
 });
 
+const isSubmitting = ref(false);
+
 for (const value in props.defaultValues) {
     user[value] = props.defaultValues[value];
 }
 
-const onSubmit = () => {
+const openSnackbar = inject('SnackbarProvider:openSnackbar');
 
-   if(user.password === user.confirmPassword) {
-       if (user.lastname && user.firstname && user.email && user.password && user.birthdate) {
-           props.submit(user);
+
+const onSubmit = async () => {
+    isSubmitting.value = true;
+
+    if(user.plainPassword === user.confirmPassword) {
+       if (user.lastname && user.firstname && user.email && user.plainPassword && user.birthdate) {
+           try {
+               await props.submit(user);
+               user.plainPassword = null ;
+               user.confirmPassword = null ;
+               user.birthdate = null ;
+               user.firstname = null ;
+               user.lastname = null ;
+               user.email = null ;
+               user.roles = null ;
+               openSnackbar({
+                   message: 'User created verify your email',
+                   type: 'success'
+               });
+               setTimeout(() => {
+                   isSubmitting.value = false;
+               }, 1000);
+           } catch (e) {
+               openSnackbar({
+                   message: 'Error during user creation',
+                   type: 'error'
+               });
+               setTimeout(() => {
+                   isSubmitting.value = false;
+               }, 1000);
+           }
        }
-   }
+       else {
+           openSnackbar({
+                message: 'Please fill all the fields',
+                type: 'error'
+              });
+       }
+    }
+    else {
+        openSnackbar({
+            message: 'Passwords do not match',
+            type: 'error'
+          });
+    }
+
 
 }
 
 </script>
 
 <template>
-    <form @submit.prevent="onSubmit">
+    <div class="grid grid-cols-12  justify-center p-8">
+        <form @submit.prevent="onSubmit" class="col-span-12">
             <div class="grid grid-cols-12 gap-6 justify-center p-8">
                 <div class="col-span-6 form-control w-full ">
                     <label for="firstname" class="label" >Firstname</label>
@@ -60,17 +104,19 @@ const onSubmit = () => {
                 </div>
                 <div class="col-span-6 ">
                     <label for="password" class="label">Password</label>
-                    <input type="password" id="password" v-model="user.password" class="input input-bordered w-full ">
+                    <input type="password" id="password" v-model="user.plainPassword" class="input input-bordered w-full ">
                 </div>
                 <div class="col-span-6  ">
                     <label for="confirmPassword" class="label">Confirm password</label>
                     <input type="password" id="confirmPassword" v-model="user.confirmPassword" class="input input-bordered w-full ">
                 </div>
                 <div  class="bg-gray-50 col-span-12 w-full">
-                    <button type="submit" class="w-full btn">Submit</button>
+                    <button :disabled="isSubmitting" type="submit" class="w-full btn">Submit</button>
                 </div>
             </div>
-    </form>
+        </form>
+        <router-link to="/login" class="col-span-12 pr-8 text-right" >Déjà un compte ? Connecte-toi</router-link>
+    </div>
 </template>
 
 <style scoped>

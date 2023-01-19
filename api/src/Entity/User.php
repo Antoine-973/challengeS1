@@ -84,26 +84,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private array $roles = [];
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create'])]
+    #[Groups(['user:create','user:read', 'user:update', 'user:register:read','user:register:create'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create'])]
+    #[Groups(['user:create','user:read', 'user:update', 'user:register:read','user:register:create'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create'])]
+    #[Groups(['user:create','user:read', 'user:update', 'user:register:read','user:register:create'])]
     private ?string $city = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create'])]
+    #[Groups(['user:create','user:read', 'user:update', 'user:register:read','user:register:create'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:update'])]
+    #[Groups(['user:update','user:read'])]
     private ?string $picture = null;
 
     #[ORM\Column]
+    #[Groups(['user:update','user:read'])]
     private ?bool $isSubscriber = false;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -118,18 +119,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $resetPassword = null;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
+    #[Groups(['user:read', 'user:update'])]
     private ?SPA $spa_id = null;
 
     #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Like::class, orphanRemoval: true)]
+    #[Groups(['user:read',  'user:update'])]
     private Collection $likes;
 
     #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Donation::class)]
+    #[Groups(['user:read',  'user:update'])]
     private Collection $donations;
 
     #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Agenda::class)]
+    #[Groups(['user:read', 'user:update'])]
     private Collection $agendas;
 
     #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Review::class)]
+    #[Groups(['user:read', 'user:update'])]
     private Collection $reviews;
 
     public function __construct()
@@ -223,17 +229,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->plainPassword = null;
     }
 
-    public function getUsername(): ?string
-    {
-        return $this->username;
-    }
 
-    public function setUsername(string $username): self
-    {
-        $this->username = $username;
-
-        return $this;
-    }
 
     public function getFirstname(): ?string
     {
