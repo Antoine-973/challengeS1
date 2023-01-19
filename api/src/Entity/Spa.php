@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SPARepository::class)]
 #[ApiResource]
-class SPA
+class Spa
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -19,10 +19,10 @@ class SPA
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $Name = null;
+    private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $Address = null;
+    private ?string $address = null;
 
     #[ORM\Column(length: 255)]
     private ?string $city = null;
@@ -36,20 +36,27 @@ class SPA
     #[ORM\Column(length: 255)]
     private ?string $phoneNumber = null;
 
-    #[ORM\OneToMany(mappedBy: 'spa_id', targetEntity: User::class)]
+    #[ORM\OneToMany(mappedBy: 'spa', targetEntity: User::class)]
     private Collection $users;
 
-    #[ORM\OneToMany(mappedBy: 'spa_id', targetEntity: Agenda::class)]
+    #[ORM\OneToMany(mappedBy: 'spa', targetEntity: Agenda::class)]
     private Collection $agendas;
 
-    #[ORM\OneToMany(mappedBy: 'spa_id', targetEntity: Review::class)]
+    #[ORM\OneToMany(mappedBy: 'spa', targetEntity: Review::class)]
     private Collection $reviews;
+
+    #[ORM\Column(length: 255)]
+    private ?string $zipCode = null;
+
+    #[ORM\OneToMany(mappedBy: 'spa', targetEntity: Animal::class)]
+    private Collection $animals;
 
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->agendas = new ArrayCollection();
         $this->reviews = new ArrayCollection();
+        $this->animals = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -59,24 +66,24 @@ class SPA
 
     public function getName(): ?string
     {
-        return $this->Name;
+        return $this->name;
     }
 
-    public function setName(string $Name): self
+    public function setName(string $name): self
     {
-        $this->Name = $Name;
+        $this->name = $name;
 
         return $this;
     }
 
     public function getAddress(): ?string
     {
-        return $this->Address;
+        return $this->address;
     }
 
-    public function setAddress(string $Address): self
+    public function setAddress(string $address): self
     {
-        $this->Address = $Address;
+        $this->address = $address;
 
         return $this;
     }
@@ -213,6 +220,48 @@ class SPA
             // set the owning side to null (unless already changed)
             if ($review->getSpaId() === $this) {
                 $review->setSpaId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getZipCode(): ?string
+    {
+        return $this->zipCode;
+    }
+
+    public function setZipCode(string $zipCode): self
+    {
+        $this->zipCode = $zipCode;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Animal>
+     */
+    public function getAnimals(): Collection
+    {
+        return $this->animals;
+    }
+
+    public function addAnimal(Animal $animal): self
+    {
+        if (!$this->animals->contains($animal)) {
+            $this->animals->add($animal);
+            $animal->setSpa($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnimal(Animal $animal): self
+    {
+        if ($this->animals->removeElement($animal)) {
+            // set the owning side to null (unless already changed)
+            if ($animal->getSpa() === $this) {
+                $animal->setSpa(null);
             }
         }
 

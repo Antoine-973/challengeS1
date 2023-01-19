@@ -6,18 +6,9 @@
 <template>
 
     <AuthProvider>
-        <div class="full">
+        <div class="w-full h-full">
             <RouterView/>
         </div>
     </AuthProvider>
 
 </template>
-
-<style scoped>
-
-.full {
-    height: 100vh;
-    width: 100vw;
-}
-</style>
-

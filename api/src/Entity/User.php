@@ -3,8 +3,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -20,6 +18,9 @@ use Doctrine\Common\Collections\Collection ;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use App\State\UserPasswordHasher;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -76,6 +77,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create'])]
     private ?string $plainPassword = null;
 
+    #[Groups(['user:read'])]
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
@@ -87,18 +89,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create','like:read'])]
     private ?string $lastname = null;
 
+    #[Groups(['user:read'])]
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create'])]
     private ?string $city = null;
 
+    #[Groups(['user:read'])]
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create'])]
     private ?string $description = null;
 
+    #[Groups(['user:read'])]
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['user:update'])]
     private ?string $picture = null;
 
+    #[Groups(['user:read'])]
     #[ORM\Column]
     private ?bool $isSubscriber = false;
 
@@ -113,19 +119,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $resetPassword = null;
 
+    #[Groups(['user:read'])]
     #[ORM\ManyToOne(inversedBy: 'users')]
-    private ?SPA $spa_id = null;
+    private ?Spa $spa = null;
 
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Like::class, orphanRemoval: true)]
+    #[Groups(['user:read'])]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Like::class, orphanRemoval: true)]
     private Collection $likes;
 
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Donation::class)]
+    #[Groups(['user:read'])]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Donation::class)]
     private Collection $donations;
 
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Agenda::class)]
+    #[Groups(['user:read'])]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Agenda::class)]
     private Collection $agendas;
 
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Review::class)]
+    #[Groups(['user:read'])]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Review::class)]
     private Collection $reviews;
 
     public function __construct()
@@ -135,8 +146,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->agendas = new ArrayCollection();
         $this->reviews = new ArrayCollection();
     }
-
-
 
     public function getId(): ?int
     {
@@ -331,14 +340,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getSpaId(): ?SPA
+    public function getSpa(): ?Spa
     {
-        return $this->spa_id;
+        return $this->spa;
     }
 
-    public function setSpaId(?SPA $spa_id): self
+    public function setSpa(?Spa $spa): self
     {
-        $this->spa_id = $spa_id;
+        $this->spa = $spa;
 
         return $this;
     }
