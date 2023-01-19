@@ -12,7 +12,11 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Controller\ConfirmAccountController;
 use App\Controller\RegisterCustomController;
+use cebe\openapi\spec\Parameter;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection ;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use App\State\UserPasswordHasher;
@@ -35,6 +39,13 @@ use Symfony\Component\Validator\Constraints as Assert;
             name: 'registerUser',
             processor: UserPasswordHasher::class
         ),
+        new Post(
+            uriTemplate: '/api/confirm',
+            controller: ConfirmAccountController::class,
+            denormalizationContext: ['groups' => 'user:confirm:account:patch'],
+            read: false,
+            name: 'confirmAccount'
+        ),
         new Get(),
         new Put(processor: UserPasswordHasher::class),
         new Patch(processor: UserPasswordHasher::class),
@@ -52,52 +63,56 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue]
+    #[ApiProperty(identifier: true)]
     private ?int $id = null;
 
     #[Assert\NotBlank]
     #[Assert\Email]
-    #[Groups(['user:read', 'user:create', 'user:update','user:register:read'])]
+    #[Groups(['user:read', 'user:create', 'user:update','user:register:read','user:register:create'])]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
-    #[Assert\NotBlank]
-    #[ORM\Column(length: 30)]
-    #[Groups(['user:read', 'user:create', 'user:update'])]
-    private ?string $username = null;
 
     #[ORM\Column]
     private ?string $password = null;
 
     #[Assert\NotBlank(groups: ['user:create'])]
-    #[Groups(['user:create', 'user:update'])]
+    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create'])]
     private ?string $plainPassword = null;
 
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create'])]
     private ?string $city = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:update'])]
     private ?string $picture = null;
 
     #[ORM\Column]
-    private ?bool $isSubscriber = null;
+    private ?bool $isSubscriber = false;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:confirm:create', 'user:confirm:read','user:confirm:account:patch'])]
     private ?string $confirmAccount = null;
 
     #[ORM\Column]
-    private ?bool $isVerified = null;
+    #[Groups(['user:confirm:read'])]
+    private ?bool $isVerified = false;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $resetPassword = null;
@@ -297,11 +312,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->confirmAccount;
     }
 
-    public function setConfirmAccount(bool $confirmAccount): self
+    public function setConfirmAccount(String $confirmAccount): self
     {
         $this->confirmAccount = $confirmAccount;
 
         return $this;
+    }
+
+    public function getConfirmAccount() {
+        return $this->confirmAccount ;
     }
 
     public function isIsVerified(): ?bool
