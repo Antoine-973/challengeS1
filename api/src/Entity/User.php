@@ -3,8 +3,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -15,11 +13,11 @@ use ApiPlatform\Metadata\Put;
 use App\Controller\ConfirmAccountController;
 use App\Controller\RegisterCustomController;
 use cebe\openapi\spec\Parameter;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection ;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use App\State\UserPasswordHasher;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -76,6 +74,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create'])]
     private ?string $plainPassword = null;
 
+    #[Groups(['user:read'])]
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
@@ -97,10 +96,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:create','user:read', 'user:update', 'user:register:read','user:register:create'])]
     private ?string $description = null;
 
+
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:update','user:read'])]
+    #[Groups(['user:update', 'user:read'])]
     private ?string $picture = null;
 
+    #[Groups(['user:read'])]
     #[ORM\Column]
     #[Groups(['user:update','user:read'])]
     private ?bool $isSubscriber = false;
@@ -116,24 +117,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $resetPassword = null;
 
-    #[ORM\ManyToOne(inversedBy: 'users')]
-    #[Groups(['user:read', 'user:update'])]
-    private ?SPA $spa_id = null;
-
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Like::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Like::class, orphanRemoval: true)]
     #[Groups(['user:read',  'user:update'])]
     private Collection $likes;
 
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Donation::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Donation::class)]
     #[Groups(['user:read',  'user:update'])]
     private Collection $donations;
 
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Agenda::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Review::class)]
     #[Groups(['user:read', 'user:update'])]
+    private ?Spa $spa = null;
+
+    #[Groups(['user:read'])]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Agenda::class)]
     private Collection $agendas;
 
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Review::class)]
-    #[Groups(['user:read', 'user:update'])]
+    #[Groups(['user:read'])]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Review::class)]
     private Collection $reviews;
 
     public function __construct()
@@ -143,8 +144,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->agendas = new ArrayCollection();
         $this->reviews = new ArrayCollection();
     }
-
-
 
     public function getId(): ?int
     {
@@ -227,11 +226,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->plainPassword = null;
     }
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 5e52fe0271fce227af399fd8763d1289ba74f8b6
     public function getFirstname(): ?string
     {
         return $this->firstname;
@@ -344,14 +338,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getSpaId(): ?SPA
+    public function getSpa(): ?Spa
     {
-        return $this->spa_id;
+        return $this->spa;
     }
 
-    public function setSpaId(?SPA $spa_id): self
+    public function setSpa(?Spa $spa): self
     {
-        $this->spa_id = $spa_id;
+        $this->spa = $spa;
 
         return $this;
     }

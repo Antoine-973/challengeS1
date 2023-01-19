@@ -7,20 +7,12 @@
 <template>
 
     <AuthProvider>
+
         <SnackbarProvider>
-            <div class="full">
+            <div class="full h-full w-full">
                 <RouterView/>
             </div>
         </SnackbarProvider>
     </AuthProvider>
 
 </template>
-
-<style scoped>
-
-.full {
-    height: 100vh;
-    width: 100vw;
-}
-</style>
-

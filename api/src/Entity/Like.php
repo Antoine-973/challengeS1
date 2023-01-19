@@ -27,16 +27,16 @@ class Like
     #[ORM\Column]
     #[Groups(['like:read'])]
     private ?bool $isValidate = false;
-    
+
     #[ORM\ManyToOne(inversedBy: 'likes')]
     #[Groups(['like:read'])]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $user_id = null;
+    private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'likes')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['like:read'])]
-    private ?Animal $animal_id = null;
+    private ?Animal $animal = null;
 
     public function getId(): ?int
     {
@@ -69,24 +69,24 @@ class Like
 
     public function getUserId(): ?User
     {
-        return $this->user_id;
+        return $this->user;
     }
 
-    public function setUserId(?User $user_id): self
+    public function setUserId(?User $user): self
     {
-        $this->user_id = $user_id;
+        $this->user = $user;
 
         return $this;
     }
 
     public function getAnimalId(): ?Animal
     {
-        return $this->animal_id;
+        return $this->animal;
     }
 
-    public function setAnimalId(?Animal $animal_id): self
+    public function setAnimalId(?Animal $animal): self
     {
-        $this->animal_id = $animal_id;
+        $this->animal = $animal;
 
         return $this;
     }
