@@ -20,13 +20,13 @@ class Agenda
     private ?\DateTimeInterface $date = null;
 
     #[ORM\ManyToOne(inversedBy: 'agendas')]
-    private ?SPA $spa_id = null;
+    private ?Spa $spa = null;
 
     #[ORM\ManyToOne(inversedBy: 'agendas')]
-    private ?User $user_id = null;
+    private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'agendas')]
-    private ?User $spa_user_id = null;
+    private ?User $spaUser = null;
 
     public function getId(): ?int
     {
@@ -46,38 +46,38 @@ class Agenda
         return $this;
     }
 
-    public function getSpaId(): ?SPA
+    public function getSpa(): ?Spa
     {
-        return $this->spa_id;
+        return $this->spa;
     }
 
-    public function setSpaId(?SPA $spa_id): self
+    public function setSpa(?Spa $spa): self
     {
-        $this->spa_id = $spa_id;
+        $this->spa = $spa;
 
         return $this;
     }
 
-    public function getUserId(): ?User
+    public function getUser(): ?User
     {
-        return $this->user_id;
+        return $this->user;
     }
 
-    public function setUserId(?User $user_id): self
+    public function setUser(?User $user): self
     {
-        $this->user_id = $user_id;
+        $this->user = $user;
 
         return $this;
     }
 
-    public function getSpaUserId(): ?User
+    public function getSpaUser(): ?User
     {
-        return $this->spa_user_id;
+        return $this->spaUser;
     }
 
-    public function setSpaUserId(?User $spa_user_id): self
+    public function setSpaUser(?User $spaUser): self
     {
-        $this->spa_user_id = $spa_user_id;
+        $this->spaUser = $spaUser;
 
         return $this;
     }

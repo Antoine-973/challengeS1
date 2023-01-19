@@ -9,6 +9,9 @@ export default defineConfig({
   server: {
     host: true,
     port: 3000,
+    watch: {
+      usePolling: true,
+    }
   },
   preview: {
     port: 80,
@@ -16,7 +19,7 @@ export default defineConfig({
   build: {
     outDir: "build",
   },
-  plugins: [vue(), eslintPlugin()],
+  plugins: [vue()],
   envDir: "./src/environments",
   resolve: {
     alias: {

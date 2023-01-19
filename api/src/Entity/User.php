@@ -3,8 +3,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -12,21 +10,40 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Controller\ConfirmAccountController;
+use App\Controller\RegisterCustomController;
+use cebe\openapi\spec\Parameter;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use App\State\UserPasswordHasher;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
+
 #[ApiResource(
     operations: [
         new GetCollection(),
         new Post(processor: UserPasswordHasher::class),
+        new Post(
+            uriTemplate: '/api/register',
+            controller: RegisterCustomController::class,
+            normalizationContext: ['groups' => 'user:register:read'],
+            denormalizationContext: ['groups' => 'user:register:create'],
+            name: 'registerUser',
+            processor: UserPasswordHasher::class
+        ),
+        new Post(
+            uriTemplate: '/api/confirm',
+            controller: ConfirmAccountController::class,
+            denormalizationContext: ['groups' => 'user:confirm:account:patch'],
+            read: false,
+            name: 'confirmAccount'
+        ),
         new Get(),
         new Put(processor: UserPasswordHasher::class),
         new Patch(processor: UserPasswordHasher::class),
@@ -44,69 +61,76 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue]
+    #[ApiProperty(identifier: true)]
     private ?int $id = null;
 
     #[Assert\NotBlank]
     #[Assert\Email]
-    #[Groups(['user:read', 'user:create', 'user:update'])]
+    #[Groups(['user:read', 'user:create', 'user:update','user:register:read','user:register:create'])]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
-    #[ORM\Column]
-    private ?string $password = null;
-
     #[Assert\NotBlank(groups: ['user:create'])]
-    #[Groups(['user:create', 'user:update'])]
+    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create'])]
     private ?string $plainPassword = null;
 
+    #[Groups(['user:read'])]
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['like:read'])]
+    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create','like:read'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['like:read'])]
+    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create','like:read'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['like:read'])]
+    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create', 'user:read', 'like:read'])]
     private ?string $city = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['like:read'])]
+    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create', 'user:read', 'like:read'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['like:read'])]
+    #[Groups(['user:update', 'user:read', 'like:read'])]
     private ?string $picture = null;
 
+    #[Groups(['user:read'])]
     #[ORM\Column]
-    private ?bool $isSubscriber = null;
+    private ?bool $isSubscriber = false;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:confirm:create', 'user:confirm:read','user:confirm:account:patch'])]
     private ?string $confirmAccount = null;
 
     #[ORM\Column]
-    private ?bool $isVerified = null;
+    #[Groups(['user:confirm:read'])]
+    private ?bool $isVerified = false;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $resetPassword = null;
 
+    #[Groups(['user:read'])]
     #[ORM\ManyToOne(inversedBy: 'users')]
-    private ?SPA $spa_id = null;
+    private ?Spa $spa = null;
 
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Like::class, orphanRemoval: true)]
+    #[Groups(['user:read'])]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Like::class, orphanRemoval: true)]
     private Collection $likes;
 
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Donation::class)]
+    #[Groups(['user:read'])]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Donation::class)]
     private Collection $donations;
 
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Agenda::class)]
+    #[Groups(['user:read'])]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Agenda::class)]
     private Collection $agendas;
 
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Review::class)]
+    #[Groups(['user:read'])]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Review::class)]
     private Collection $reviews;
 
     public function __construct()
@@ -116,8 +140,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->agendas = new ArrayCollection();
         $this->reviews = new ArrayCollection();
     }
-
-
 
     public function getId(): ?int
     {
@@ -277,11 +299,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->confirmAccount;
     }
 
-    public function setConfirmAccount(bool $confirmAccount): self
+    public function setConfirmAccount(String $confirmAccount): self
     {
         $this->confirmAccount = $confirmAccount;
 
         return $this;
+    }
+
+    public function getConfirmAccount() {
+        return $this->confirmAccount ;
     }
 
     public function isIsVerified(): ?bool
@@ -308,14 +334,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getSpaId(): ?SPA
+    public function getSpa(): ?Spa
     {
-        return $this->spa_id;
+        return $this->spa;
     }
 
-    public function setSpaId(?SPA $spa_id): self
+    public function setSpa(?Spa $spa): self
     {
-        $this->spa_id = $spa_id;
+        $this->spa = $spa;
 
         return $this;
     }

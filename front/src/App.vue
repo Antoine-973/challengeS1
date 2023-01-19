@@ -1,17 +1,14 @@
 <script setup>
-import { RouterView } from 'vue-router'
+    import AuthProvider from "./components/provider/AuthProvider.vue";
+    import {RouterView} from "vue-router";
 </script>
 
 <template>
-  <header>
 
-    <div class="wrapper">
-      <RouterView/>
+    <AuthProvider>
+        <div class="w-full h-full">
+            <RouterView/>
+        </div>
+    </AuthProvider>
 
-      <!-- <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav> -->
-    </div>
-  </header>
 </template>

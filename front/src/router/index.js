@@ -9,7 +9,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: () => import('../views/HomeView.vue')
     },
     {
       path: '/AllAnimalsLike',
@@ -49,6 +49,11 @@ const router = createRouter({
       path: "/users/show/:id",
       component: () => import("../components/user/Show.vue"),
     },
+    {
+      name: "register",
+      path: "/register",
+      component: () => import("../views/security/RegisterView.vue"),
+    }
   ]
 })
 
