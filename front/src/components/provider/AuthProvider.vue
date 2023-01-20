@@ -25,8 +25,8 @@ const getUser = async (data) => {
         const decoded = await jwtDecode(data.token);
         console.log(decoded);
         const response = await fetch('https://localhost/users/'+decoded.id) ;
-        const json = await response.json();
-        user.value = json['hydra:member'][0];
+        user.value  = await response.json();
+
     } catch (e) {
         console.log(e);
     }
