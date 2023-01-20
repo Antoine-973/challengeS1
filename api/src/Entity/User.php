@@ -78,7 +78,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
-    #[ORM\Column(length: 255, nullable: true)]
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['user:create','user:read', 'user:update', 'user:register:read','user:register:create','like:read'])]
@@ -101,7 +100,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:update', 'user:read'])]
     private ?string $picture = null;
 
-    #[Groups(['user:read'])]
     #[ORM\Column]
     #[Groups(['user:update','user:read'])]
     private ?bool $isSubscriber = false;
