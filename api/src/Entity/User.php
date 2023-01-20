@@ -3,6 +3,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -55,6 +57,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity('email')]
+#[ApiFilter(SearchFilter::class, properties: ['email' => 'exact'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[Groups(['user:read'])]
@@ -69,6 +72,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read', 'user:create', 'user:update','user:register:read','user:register:create'])]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $password = null;
 
     #[Assert\NotBlank(groups: ['user:create'])]
     #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create'])]
@@ -134,12 +140,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Review::class)]
     private Collection $reviews;
 
+    #[ORM\OneToMany(mappedBy: 'users', targetEntity: ResetPassword::class)]
+    private Collection $resetPasswords;
+
     public function __construct()
     {
         $this->likes = new ArrayCollection();
         $this->donations = new ArrayCollection();
         $this->agendas = new ArrayCollection();
         $this->reviews = new ArrayCollection();
+        $this->resetPasswords = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -461,6 +471,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($review->getUserId() === $this) {
                 $review->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ResetPassword>
+     */
+    public function getResetPasswords(): Collection
+    {
+        return $this->resetPasswords;
+    }
+
+    public function addResetPassword(ResetPassword $resetPassword): self
+    {
+        if (!$this->resetPasswords->contains($resetPassword)) {
+            $this->resetPasswords->add($resetPassword);
+            $resetPassword->setUsers($this);
+        }
+
+        return $this;
+    }
+
+    public function removeResetPassword(ResetPassword $resetPassword): self
+    {
+        if ($this->resetPasswords->removeElement($resetPassword)) {
+            // set the owning side to null (unless already changed)
+            if ($resetPassword->getUsers() === $this) {
+                $resetPassword->setUsers(null);
             }
         }
 
