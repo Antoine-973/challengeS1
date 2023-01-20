@@ -17,6 +17,7 @@ class Animal
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['like:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -39,25 +40,32 @@ class Animal
     private ?bool $isSterilize = null;
 
     #[ORM\OneToMany(mappedBy: 'animal', targetEntity: Like::class, orphanRemoval: true)]
+    #[Groups(['like:read'])]
     private Collection $likes;
 
     #[ORM\ManyToOne(inversedBy: 'animals')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['like:read'])]
     private ?Species $species = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Groups(['like:read'])]
     private ?int $sex = null;
 
     #[ORM\ManyToMany(targetEntity: Breed::class, inversedBy: 'animals')]
+    #[Groups(['like:read'])]
     private Collection $breeds;
 
     #[ORM\ManyToOne(inversedBy: 'animals')]
+    #[Groups(['like:read'])]
     private ?Spa $spa = null;
 
     #[ORM\ManyToMany(targetEntity: Behaviour::class, inversedBy: 'animals')]
+    #[Groups(['like:read'])]
     private Collection $behaviours;
 
     #[ORM\OneToMany(mappedBy: 'animal', targetEntity: AnimalPicture::class, orphanRemoval: true)]
+    #[Groups(['like:read'])]
     private Collection $animalPictures;
 
     public function __construct()

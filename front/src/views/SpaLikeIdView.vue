@@ -39,27 +39,29 @@ getLikeId(idUrl);
 </script>
 
 <template>
-  <router-link to="/AllAnimalsLike"><i class="fas fa-arrow-left">Retour à la liste des demandes</i></router-link>
+  <router-link to="/AllAnimalsLike"><i class="fas fa-arrow-left"></i> Retour à la liste des demandes</router-link>
   <h1>Récapitulatif de la demande d'adoption N°{{ data.id }}</h1>
   <div class="container-info">
     <div class="card lg:card-side bg-base-100 shadow-xl">
-      <figure><img v-bind:src="`${data.animal_id.picture}`" alt="animal"/></figure>
+      <!-- <figure><img v-bind:src="`${data.animalId.animalPictures}`" alt="animal"/></figure> -->
+      <figure><img src="https://www.veterinaire-lecres.com/Uploads/conseils/Canitie.jpg" alt="animal"/></figure>
       <div class="card-body">
-        <h2 class="card-title">{{ data.animal_id.name }}</h2>
-        <p>{{ new Date(data.animal_id.birthday).getDate() + '/' + (new Date(data.animal_id.birthday).getMonth() + 1) + '/' + new Date(data.animal_id.birthday).getFullYear() }}</p>
-        <p>{{ new Date().getFullYear() - new Date(data.animal_id.birthday).getFullYear() + ' ans'}}</p>
-        <!-- new Date().getDate() -  new Date(data.animal_id.birthday).getDate() + '/' + new Date().getDate() - (new Date(data.animal_id.birthday).getMonth() + 1) + '/' + new Date().getDate() - new Date(data.animal_id.birthday).getFullYear() -->
-        <p><strong>Ville de naissance :</strong> {{ data.animal_id.birthLocation }}</p>
-        <p>{{ data.animal_id.description }}</p>
+        <h2 class="card-title">{{ data.animalId.name }}</h2>
+        <p>{{ new Date(data.animalId.birthday).getDate() + '/' + (new Date(data.animalId.birthday).getMonth() + 1) + '/' + new Date(data.animalId.birthday).getFullYear() }}</p>
+        <p>{{ new Date().getFullYear() - new Date(data.animalId.birthday).getFullYear() + ' ans'}}</p>
+        <!-- new Date().getDate() -  new Date(data.animalId.birthday).getDate() + '/' + new Date().getDate() - (new Date(data.animalId.birthday).getMonth() + 1) + '/' + new Date().getDate() - new Date(data.animalId.birthday).getFullYear() -->
+        <p><strong>Ville de naissance :</strong> {{ data.animalId.birthLocation }}</p>
+        <p>{{ data.animalId.description }}</p>
       </div>
     </div>
 
     <div class="card lg:card-side bg-base-100 shadow-xl">
-      <figure><img v-bind:src="`${data.user_id.picture}`" alt="adopteur"/></figure>
+      <!-- <figure><img v-bind:src="`${data.userId.picture}`" alt="adopteur"/></figure> -->
+      <figure><img src="https://st2.depositphotos.com/1662991/8837/i/450/depositphotos_88370500-stock-photo-mechanic-wearing-overalls.jpg" alt="adopteur"/></figure>
       <div class="card-body">
-        <h2 class="card-title">{{ data.user_id.lastname }} {{ data.user_id.firstname }}</h2>
-        <p> {{ data.user_id.city }}</p>
-        <p>{{ data.user_id.description }}</p>
+        <h2 class="card-title">{{ data.userId.lastname }} {{ data.userId.firstname }}</h2>
+        <p> {{ data.userId.city }}</p>
+        <p>{{ data.userId.description }}</p>
       </div>
     </div>
   </div>

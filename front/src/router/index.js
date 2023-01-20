@@ -22,34 +22,6 @@ const router = createRouter({
       component: SpaLikeIdView
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    },
-    {
-      name: "UserList",
-      path: "/users/",
-      component: () => import("../components/user/List.vue"),
-    },
-    {
-      name: "UserCreate",
-      path: "/users/create",
-      component: () => import("../components/user/Create.vue"),
-    },
-    {
-      name: "UserUpdate",
-      path: "/users/edit/:id",
-      component: () => import("../components/user/Update.vue"),
-    },
-    {
-      name: "UserShow",
-      path: "/users/show/:id",
-      component: () => import("../components/user/Show.vue"),
-    },
-    {
       name: "register",
       path: "/register",
       component: () => import("../views/security/RegisterView.vue"),

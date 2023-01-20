@@ -57,7 +57,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity('email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'like:read'])]
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue]

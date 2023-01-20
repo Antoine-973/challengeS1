@@ -59,15 +59,14 @@ getLike();
         <template v-for='like in data' v-bind:key="like.id">
           <tr v-if="like.isPending">
             <th></th>
-            <th>{{ like.animal_id.name }}</th>
-            <th>{{ new Date(like.animal_id.birthday).getDate() + '/' + (new Date(like.animal_id.birthday).getMonth() + 1) + '/' + new Date(like.animal_id.birthday).getFullYear() }}</th>
-            <th>{{ like.user_id.lastname }}</th>
-            <th>{{ like.user_id.firstname }}</th>
+            <th>{{ like.animalId.name }}</th>
+            <th>{{ new Date(like.animalId.birthday).getDate() + '/' + (new Date(like.animalId.birthday).getMonth() + 1) + '/' + new Date(like.animalId.birthday).getFullYear() }}</th>
+            <th>{{ like.userId.lastname }}</th>
+            <th>{{ like.userId.firstname }}</th>
             <th class="action-icon">
               <router-link :to="'likes/' + like.id"><i class="fas fa-eye"></i></router-link>
               <button @click="patchAccpetLike(like.id)"><i class="fas fa-check"></i></button>
-              <button @click="patchRejectLike(like.id)"><i class="fas "></i>REFUSER</button>
-              <i class="fas fa-close"></i>
+              <button @click="patchRejectLike(like.id)"><i class="fas fa-close"></i></button>
             </th>
           </tr>
         </template>
