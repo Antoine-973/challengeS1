@@ -47,7 +47,7 @@ class RegisterCustomController extends AbstractController {
             $user->getEmail(),
             'Confirmation de compte',
             '<p>Tu viens de créer un compte sur SPAdoption click sur ce lien pour vérifier tom compte : </p>
-                <a href="http://localhost:3000/confirmAccount?token='. $token . ' &id=' . $user->getId() .' ">
+                <a href="http://localhost:3000/confirmAccount?token='.$token.'">
                 confirmer le compte</a>'
         );
         return $user ;

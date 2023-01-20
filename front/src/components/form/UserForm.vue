@@ -110,7 +110,7 @@ const onSubmit = async () => {
                     <label for="confirmPassword" class="label">Confirm password</label>
                     <input type="password" id="confirmPassword" v-model="user.confirmPassword" class="input input-bordered w-full ">
                 </div>
-                <div  class="bg-gray-50 col-span-12 w-full">
+                <div  class=" col-span-12 w-full">
                     <button :disabled="isSubmitting" type="submit" class="w-full btn">Submit</button>
                 </div>
             </div>

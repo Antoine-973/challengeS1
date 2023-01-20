@@ -18,23 +18,26 @@ class ConfirmAccountController extends AbstractController
         private EntityManagerInterface $entityManager,
         private UserRepository $userRepository
     ) {}
-    #[NoReturn] public function __invoke(Request $request): ?User
+
+    public function __invoke(Request $request)
     {
-        $data = json_decode($request->getContent(), JSON_PRETTY_PRINT) ;
-        if(!is_null($data['confirmAccount'])) {
+        try {
 
-            $user = $this->userRepository->findOneBy(['confirmAccount' => $data['confirmAccount']]);
+            $data = $request->toArray() ;
+            $user = $this->userRepository->findOneBy(['confirmAccount' => $data['confirmAccount']]) ;
+            if(!is_null($user)) {
 
-            if ($user) {
-                $user->setConfirmAccount('');
                 $user->setIsVerified(true);
+                $user->setConfirmAccount('');
                 $this->entityManager->persist($user);
+                return $user ;
             }
 
-            return $user ;
+
+        } catch (\Exception $e) {
+            var_dump($e) ;
         }
 
-        return null ;
     }
 
 }

@@ -123,7 +123,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read',  'user:update'])]
     private Collection $donations;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Review::class)]
+    #[ORM\ManyToOne(inversedBy: 'users', targetEntity: Spa::class)]
     #[Groups(['user:read', 'user:update'])]
     private ?Spa $spa = null;
 
