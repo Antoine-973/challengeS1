@@ -79,8 +79,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private array $roles = [];
 
     #[ORM\Column(length: 255, nullable: true)]
-
-    #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['user:create','user:read', 'user:update', 'user:register:read','user:register:create','like:read'])]
     private ?string $firstname = null;
 
@@ -101,7 +99,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:update', 'user:read'])]
     private ?string $picture = null;
 
-    #[Groups(['user:read'])]
     #[ORM\Column]
     #[Groups(['user:update','user:read'])]
     private ?bool $isSubscriber = false;
@@ -125,7 +122,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read',  'user:update'])]
     private Collection $donations;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Review::class)]
+    #[ORM\ManyToOne(inversedBy: 'users', targetEntity: Spa::class)]
     #[Groups(['user:read', 'user:update'])]
     private ?Spa $spa = null;
 

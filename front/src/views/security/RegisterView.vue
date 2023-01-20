@@ -12,7 +12,6 @@ const register = async (data) => {
             body: JSON.stringify(data)
         });
         const json = await response.json();
-        console.log(json);
     } catch (e) {
         console.log(e);
     }
