@@ -23,8 +23,8 @@ const logout = () => {
 const getUser = async (data) => {
     try {
         const decoded = await jwtDecode(data.token);
-
-        const response = await fetch('https://localhost/users?email='+decoded.username) ;
+        console.log(decoded);
+        const response = await fetch('https://localhost/users/'+decoded.id) ;
         const json = await response.json();
         user.value = json['hydra:member'][0];
     } catch (e) {
@@ -33,6 +33,8 @@ const getUser = async (data) => {
 }
 
 if (localStorage.getItem('token')) {
+    const token = localStorage.getItem('token');
+    console.log(token);
     getUser({token: localStorage.getItem('token')});
 }
 

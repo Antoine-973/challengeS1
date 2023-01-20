@@ -6,8 +6,7 @@
 
 <template>
 
-    <AuthProvider>
-
+    <AuthProvider v-slot="{user}" >
         <SnackbarProvider>
             <div class="full h-full w-full">
                 <RouterView/>
