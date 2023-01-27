@@ -22,6 +22,16 @@ const router = createRouter({
       name: "confirmAccount",
       path: "/confirmAccount",
       component: () => import("../views/security/ConfirmAccountView.vue"),
+    },
+    {
+      path: '/backOffice/review',
+      name: 'backOffice',
+      component: () => import('../views/ReviewBO.vue')
+    },
+    {
+      path: "/backOffice/review/:id",
+      name: "rateUser",
+      component: () => import('../views/RateUserBO.vue')
     }
   ]
 })
