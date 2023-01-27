@@ -60,7 +60,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiFilter(SearchFilter::class, properties: ['email' => 'exact'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'like:read'])]
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue]
@@ -86,11 +86,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 
     #[ORM\Column(length: 255, nullable: true)]
+<<<<<<< HEAD
     #[Groups(['user:create','user:read', 'user:update', 'user:register:read','user:register:create','like:read'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['user:create','user:read', 'user:update', 'user:register:read','user:register:create','like:read'])]
+=======
+    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create','like:read', 'user:read'])]
+    private ?string $firstname = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create','like:read', 'user:read'])]
+>>>>>>> 7ea818f (backoffice)
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
