@@ -18,24 +18,23 @@ class Like
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['like:read', 'like:update'])]
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Groups(['like:read'])]
+    #[Groups(['like:read', 'like:update'])]
     private ?bool $isPending = true;
 
     #[ORM\Column]
-    #[Groups(['like:read'])]
+    #[Groups(['like:read', 'like:update'])]
     private ?bool $isValidate = false;
 
     #[ORM\ManyToOne(inversedBy: 'likes')]
-    #[Groups(['like:read'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'likes')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['like:read'])]
     private ?Animal $animal = null;
 
     public function getId(): ?int
@@ -66,7 +65,7 @@ class Like
 
         return $this;
     }
-
+    #[Groups(['like:read'])]
     public function getUserId(): ?User
     {
         return $this->user;
@@ -78,7 +77,7 @@ class Like
 
         return $this;
     }
-
+    #[Groups(['like:read'])]
     public function getAnimalId(): ?Animal
     {
         return $this->animal;
