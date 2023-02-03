@@ -14,7 +14,7 @@ use App\Entity\Like;
 use App\Repository\LikeRepository;
 
 #[AsController]
-class ReviewController extends AbstractController
+class LikesController extends AbstractController
 {
     private $em;
     private $likeRepository;
@@ -28,16 +28,9 @@ class ReviewController extends AbstractController
      */
     public function __invoke()
     {
-        $likeList = $this->likerepo->findBy(['isValidate' => true]);
-
-        // var_dump($likeList);
-        // 1 on récupère la liste de tous les utilisateurs ayant un like validé
-        // 2 pour chaque user on récupère l'animal liké
+        $likeList = $this->likerepo->findAll();
 
         return $likeList;
-
-        // Pour chaque user récupérer l'animal et vérifier que le spa id de l'animal correspond à l'id spa du user connecté
-        // Si oui --> on affiche l'utilisateur
-        // Si non --> on affiche pas l'utilisateur
+       
     }
 }

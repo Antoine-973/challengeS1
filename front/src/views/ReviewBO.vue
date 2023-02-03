@@ -2,34 +2,37 @@
     import Menu from "../components/TemplateBO.vue";
     import { ref } from 'vue'
     import {getAcceptedLikesUsers} from '../services/reviewUserService';
+    import jwt_decode from 'jwt-decode';
+    import { getUserInfo } from '../services/rateUserService';
 
     const data = ref(null)
-
-
-       
-    // fetch("https://localhost/likes/getAcceptedLikes", {
-
-    // }).then(response => {
-    //     if(response.ok) {
-    //         return response.json();
-    //     }
-    //     return Promise.reject(new Error("Erreur: impossible de récupérer la liste des utilisateurs :("));
-    // }).then((datas) => {
-    //     // console.log(datas['hydra:member']);
-    //     data.value = datas['hydra:member'];
-    //     // console.log(data.value[0].userId.firstname);
-    //     return datas;
-    // }).catch(function(error) {
-    //     console.log(error.message);
-    // });
+    let filterData = ref(null);
+    let connectedUser;
+    let connectedUserSpaId;
 
     const getUserList = async() => {
         const responseGetList = await getAcceptedLikesUsers();
         const user = await responseGetList.json();
         data.value = user['hydra:member'];
+
+        filterData.value = data.value.filter(el => el.animalId.spa.id === connectedUserSpaId);
     }
 
+    const getConnectedUser = async() => {
+        const token = localStorage.getItem("token");
+        connectedUser = jwt_decode(token)
+    }
+
+    const getInfoConnectedUser = async(id) => {
+        const info = await getUserInfo(id);
+        const response = await info.json();
+        connectedUserSpaId = response.spa.id;
+    }
+
+    getConnectedUser();
+    getInfoConnectedUser(connectedUser.id);
     getUserList();
+
     
 </script>
 
@@ -52,7 +55,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="user in data">
+                        <tr v-for="user in filterData">
                             <th>1</th>
                             <td>{{ user.userId.lastname }}</td>
                             <td>{{ user.userId.firstname }}</td>

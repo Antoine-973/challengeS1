@@ -1,51 +1,59 @@
 <script setup>
     import Menu from "../components/TemplateBO.vue";
-    import { Field, Form } from 'vee-validate';
+    import { Field, Form, defineRule } from 'vee-validate';
     import { ref, reactive } from 'vue'
-    import {getUserToRate} from '../services/rateUserService';
+    import {getUserInfo, rateUser} from '../services/rateUserService';
+    import jwt_decode from 'jwt-decode';
 
     const dataUser = ref(null)
+    
 
     let idUser = (new URL(window.location)).pathname.split('/')[3];
+    let connectedUser;
+    let connectedUserSpaId;
 
     const formData = reactive({
         message: '',
-        stars: '',
+        stars: '1',
     });
 
-    // fetch("https://localhost/users/" + idUser, {
-
-    // }).then(response => {
-    //     if(response.ok) {
-    //         return response.json();
-    //     }
-    //     return Promise.reject(new Error("Erreur: impossible de récupérer les informations de l'utilisateur :("));
-    // }).then((datas) => {
-    //     dataUser.value = datas;
-    //     // console.log(datas)
-    //     return datas;
-    // }).catch(function(error) {
-    //     console.log(error.message);
-    // });
-
-    const onSubmit = () => {
-        console.log("message: " + formData.message);
-        console.log("note: " + formData.stars);
-        console.log("id user: " + idUser);
-
-        //Ici rajouter appel API et envoyer les données en BDD
-        //Récupérer l'id du user connecté et l'id SPA
+    const getConnectedUser = async() => {
+        const token = localStorage.getItem("token");
+        connectedUser = jwt_decode(token)
     }
+    
 
     const getUser = async() => {
-        const responseGetUser = await getUserToRate(idUser);
+        const responseGetUser = await getUserInfo(idUser);
         const user = await responseGetUser.json();
         dataUser.value = user;
-        // console.log(dataUser.value);
+    }
+
+    
+    const getInfoConnectedUser = async(id) => {
+        const info = await getUserInfo(id);
+        const response = await info.json();
+        connectedUserSpaId = response.spa.id;
     }
 
     getUser();
-    
+    getConnectedUser();
+    getInfoConnectedUser(connectedUser.id);
+
+
+    const onSubmit = async() => {
+        let rate = parseInt(formData.stars);
+        await rateUser(idUser, rate, formData.message, connectedUser.id, connectedUserSpaId);
+
+    }
+
+    defineRule('required', value => {
+        if (!value || !value.length) {
+            return 'This field is required';
+        }
+        return true;
+    }); 
+
     
 </script>
 
@@ -62,22 +70,21 @@
 
                 <Form @submit="onSubmit" class="flex flex-col w-full">
                     <div class="rating mt-28">
-                        <input type="radio" name="rating-2" class="mask mask-star-2 bg-warning" value="1" v-model="formData.stars"> 
-                        <input type="radio" name="rating-2" checked="checked" class="mask mask-star-2 bg-warning" value="2" v-model="formData.stars"> 
+                        <input type="radio" name="rating-2" checked="checked" class="mask mask-star-2 bg-warning" value="1" v-model="formData.stars"> 
+                        <input type="radio" name="rating-2" class="mask mask-star-2 bg-warning" value="2" v-model="formData.stars"> 
                         <input type="radio" name="rating-2" class="mask mask-star-2 bg-warning" v-model="formData.stars" value="3"> 
                         <input type="radio" name="rating-2" class="mask mask-star-2 bg-warning" v-model="formData.stars" value="4"> 
                         <input type="radio" name="rating-2" class="mask mask-star-2 bg-warning" v-model="formData.stars" value="5">
                     </div>
 
-                    <Field as="textarea" name="description" class="w-3/4 mt-11 h-40" v-model="formData.message"/>
+                    
+                    <Field as="textarea" name="description" class="w-3/4 mt-11 h-40" rules="required" v-model="formData.message"/> <!-- Mettre en required -->
+                       
 
-                    <button class="btn btn-primary w-24 mt-16" type="submit">Envoyer</button>
+
+                    <button class="btn btn-primary w-24 mt-16" type="submit">Envoyer</button> 
                 </Form>
 
-                <!-- <p>message : {{ formData.message }}</p>
-                <p>Nombre d'étoiles: {{ formData.stars }}</p> -->
-
-                
             </div>
         </div>
      </div>

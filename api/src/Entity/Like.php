@@ -7,6 +7,7 @@ use App\Repository\LikeRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Controller\ReviewController;
+use App\Controller\LikesController;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
@@ -30,7 +31,13 @@ use ApiPlatform\Metadata\Delete;
         new Delete(),
         new Patch(),
         new Put(),
-        new Get()
+        new Get(),
+        new Get(
+            uriTemplate: '/likes',
+            controller: LikesController::class,
+            read: false,
+            name: 'getLikes'
+        )
     ]
 
 )]
@@ -101,6 +108,7 @@ class Like
         return $this;
     }
 
+    #[Groups(['like:read'])]
     public function getAnimalId(): ?Animal
     {
         return $this->animal;
