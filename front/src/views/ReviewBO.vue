@@ -6,16 +6,16 @@
     import { getUserInfo } from '../services/rateUserService';
 
     const data = ref(null)
-    let filterData = ref(null);
+    const filterData = ref(null);
     let connectedUser;
-    let connectedUserSpaId;
+    let connectedUserSpaId = ref(null);
 
-    const getUserList = async() => {
+    const getUserList = async(id) => {
         const responseGetList = await getAcceptedLikesUsers();
         const user = await responseGetList.json();
         data.value = user['hydra:member'];
 
-        filterData.value = data.value.filter(el => el.animalId.spa.id === connectedUserSpaId);
+        filterData.value = data.value.filter(el => el.animalId.spa.id === id);
     }
 
     const getConnectedUser = async() => {
@@ -26,13 +26,12 @@
     const getInfoConnectedUser = async(id) => {
         const info = await getUserInfo(id);
         const response = await info.json();
-        connectedUserSpaId = response.spa.id;
+        connectedUserSpaId.value = response.spa.id;
+        getUserList(connectedUserSpaId.value);
     }
 
     getConnectedUser();
     getInfoConnectedUser(connectedUser.id);
-    getUserList();
-
     
 </script>
 
