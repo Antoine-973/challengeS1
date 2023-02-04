@@ -11,6 +11,7 @@
     let idUser = (new URL(window.location)).pathname.split('/')[3];
     let connectedUser;
     let connectedUserSpaId;
+    let apiResponseStatus = ref(false);
 
     const formData = reactive({
         message: '',
@@ -43,8 +44,10 @@
 
     const onSubmit = async() => {
         let rate = parseInt(formData.stars);
-        await rateUser(idUser, rate, formData.message, connectedUser.id, connectedUserSpaId);
-
+        const responseSubmit = await rateUser(idUser, rate, formData.message, connectedUser.id, connectedUserSpaId);
+        if(responseSubmit.status === 201){
+            apiResponseStatus.value = true;
+        }
     }
 
     defineRule('required', value => {
@@ -63,6 +66,13 @@
         <Menu></Menu>
 
         <div class="grow ml-32">
+
+            <div class="alert alert-success shadow-lg" v-if="apiResponseStatus">
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <span>La note à bien été enregistrée !</span>
+                </div>
+            </div>
             
             <h1 class="text-xl text-center mt-11" v-if="dataUser != null">Noter l'utilisateur : {{ dataUser.firstname }} {{ dataUser.lastname }}</h1>
             
