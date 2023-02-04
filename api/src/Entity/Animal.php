@@ -17,6 +17,7 @@ class Animal
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['like:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -50,6 +51,7 @@ class Animal
     private Collection $breeds;
 
     #[ORM\ManyToOne(inversedBy: 'animals')]
+    #[Groups(['like:read'])]
     private ?Spa $spa = null;
 
     #[ORM\ManyToMany(targetEntity: Behaviour::class, inversedBy: 'animals')]
