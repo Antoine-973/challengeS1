@@ -88,7 +88,7 @@
                     </div>
 
                     
-                    <Field as="textarea" name="description" class="w-3/4 mt-11 h-40" rules="required" v-model="formData.message"/> <!-- Mettre en required -->
+                    <Field as="textarea" name="description" class="w-3/4 mt-11 h-40" rules="required" v-model="formData.message"/>
                        
 
 
