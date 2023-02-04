@@ -10,11 +10,6 @@ export const getUserInfo = async (id) => {
 
 export const rateUser = async (idUserToRate, rate, message, connectedUser, spaId) => {
 
-  console.log("id user to rate: " + idUserToRate);
-  console.log("rate: " + typeof(rate) );
-  console.log("message: " + message);
-  console.log("spaid: " + spaId);
-
   return await fetch(ratePath, {
     method: 'POST',
     headers: {

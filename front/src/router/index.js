@@ -27,7 +27,7 @@ const router = createRouter({
     },
     {
       path: '/backOffice/review',
-      name: 'backOffice',
+      name: 'backOffice review',
       component: () => import('../views/ReviewBO.vue'),
       meta:{
         isAuth: true,
@@ -41,6 +41,24 @@ const router = createRouter({
       meta:{
         isAuth: true,
         authorize: "ROLE_SPA",
+      }
+    },
+    {
+      path: "/backOffice/admin",
+      name: "backoffice",
+      component: () => import('../views/Admin/ReviewList.vue'),
+      meta:{
+        isAuth: true,
+        authorize_admin: "ROLE_ADMIN",
+      }
+    },
+    {
+      path: "/backOffice/admin/reviews/:id",
+      name: "backoffice reviews",
+      component: () => import('../views/Admin/ReviewManagement.vue'),
+      meta:{
+        isAuth: true,
+        authorize_admin: "ROLE_ADMIN",
       }
     }
   ]
@@ -59,6 +77,18 @@ router.beforeEach((to, from, next)=>{
     let connectedUser = jwt_decode(token)
     let roleUser = connectedUser.roles;
     let isAuthorize = roleUser.includes('ROLE_SPA');
+
+    if(!isAuthorize){
+      next('/login')
+    }
+
+  }
+
+  if(to.matched.some(record => record.meta.authorize_admin)){
+    let token = localStorage.getItem('token')
+    let connectedUser = jwt_decode(token)
+    let roleUser = connectedUser.roles;
+    let isAuthorize = roleUser.includes('ROLE_ADMIN');
 
     if(!isAuthorize){
       next('/login')
