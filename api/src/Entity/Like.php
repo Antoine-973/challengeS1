@@ -13,6 +13,8 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\LikeUserCustomController;
 use Symfony\Component\Serializer\Annotation\Groups;
+use App\Controller\ReviewController;
+use App\Controller\LikesController;
 
 #[ORM\Entity(repositoryClass: LikeRepository::class)]
 #[ORM\Table(name: '`like`')]
@@ -20,9 +22,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
     normalizationContext: ['groups' => ['like:read']],
     denormalizationContext: ['groups' => ['like:create', 'like:update']],
     operations: [
-        new GetCollection(),
-        new Get(),
+        new Get(
+            uriTemplate: '/likes/getAcceptedLikes',
+            // denormalizationContext: ['groups' => 'user:confirm:account:patch'],
+            controller: ReviewController::class,
+            read: false,
+            name: 'getAcceptedLikes'
+        ),
         new Post(),
+        new Delete(),
         new Patch(
             uriTemplate: '/likes/{id}',
             controller: LikeUserCustomController::class,
@@ -31,8 +39,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
             name: 'sendLikeUser'
         ),
         new Put(),
-        new Delete(),
+        new Get(),
+        new Get(
+            uriTemplate: '/likes',
+            controller: LikesController::class,
+            read: false,
+            name: 'getLikes'
+        )
     ]
+
 )]
 class Like
 {

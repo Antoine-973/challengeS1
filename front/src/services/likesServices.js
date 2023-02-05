@@ -11,10 +11,6 @@ export const getLikesId = async (id) => {
   });
 }
 
-export const getUserInfo = async (id) => {
-  return await fetch(basePath + 'users/' + id, {})
-}
-
 export const patchAcceptLikes = async (id) => {
     return await fetch(pathLikes + '/' + id, {
         method: 'PUT',
@@ -23,7 +19,7 @@ export const patchAcceptLikes = async (id) => {
         },
         body: JSON.stringify({
           isPending: false,
-          isValidate: true
+          isValidate: true,
         })
     });
 }

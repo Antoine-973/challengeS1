@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import {getLikesId, patchAcceptLikes, patchRejectLikes} from '../services/likesServices';
+import Menu from "../components/TemplateBO.vue";
 const data = ref(null)
 
 let idUrl = (new URL(window.location)).pathname.split('/')[2];
@@ -32,61 +33,70 @@ getLikeId(idUrl);
 </script>
 
 <template>
-  <router-link to="/AllAnimalsLike"><i class="fas fa-arrow-left"></i> Retour à la liste des demandes</router-link>
-  <h1>Récapitulatif de la demande d'adoption N°{{ data.id }}</h1>
-  <div class="container-info">
-    <div class="card lg:card-side bg-base-100 shadow-xl">
-      <!-- <figure><img v-bind:src="`${data.animalId.animalPictures}`" alt="animal"/></figure> -->
-      <figure><img src="https://www.veterinaire-lecres.com/Uploads/conseils/Canitie.jpg" alt="animal"/></figure>
-      <div class="card-body">
-        <h2 class="card-title">{{ data.animalId.name }}</h2>
-        <p>{{ new Date(data.animalId.birthday).getDate() + '/' + (new Date(data.animalId.birthday).getMonth() + 1) + '/' + new Date(data.animalId.birthday).getFullYear() }}</p>
-        <p>{{ new Date().getFullYear() - new Date(data.animalId.birthday).getFullYear() + ' ans'}}</p>
-        <p><strong>Ville de naissance :</strong> {{ data.animalId.birthLocation }}</p>
-        <p>{{ data.animalId.description }}</p>
+  <main>
+    <div class="flex justify-between mt-5">
+      <Menu></Menu>
+      <div class="grow ml-32">
+        <router-link to="/AllAnimalsLike"><i class="fas fa-arrow-left"></i> Retour à la liste des demandes</router-link>
+        <h1 class="text-center mb-11 text-lg">Récapitulatif de la demande d'adoption N°{{ data.id }}</h1>
+        <div class="overflow-x-auto">
+          <div class="container-info">
+            <div class="card card-side bg-base-100 shadow-xl">
+              <!-- <figure><img v-bind:src="`${data.animalId.animalPictures}`" alt="animal"/></figure> -->
+              <figure><img src="https://www.veterinaire-lecres.com/Uploads/conseils/Canitie.jpg" alt="animal"/></figure>
+              <div class="card-body">
+                <h2 class="card-title">{{ data.animalId.name }}</h2>
+                <p>{{ new Date(data.animalId.birthday).getDate() + '/' + (new Date(data.animalId.birthday).getMonth() + 1) + '/' + new Date(data.animalId.birthday).getFullYear() }}</p>
+                <p>{{ new Date().getFullYear() - new Date(data.animalId.birthday).getFullYear() + ' ans'}}</p>
+                <p><strong>Ville de naissance :</strong> {{ data.animalId.birthLocation }}</p>
+                <p>{{ data.animalId.description }}</p>
+              </div>
+            </div>
+
+            <div class="card lg:card-side bg-base-100 shadow-xl">
+              <figure><img v-bind:src="`${data.userId.picture}`" alt="adopteur"/></figure>
+              <div class="card-body">
+                <h2 class="card-title">{{ data.userId.lastname }} {{ data.userId.firstname }}</h2>
+                <p> {{ data.userId.city }}</p>
+                <p>{{ data.userId.description }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="container-button">
+            <label :for="'accept' + data.id" class="btn btn-accent">Accepter la demande</label>
+            <label :for="'reject' + data.id" class="btn btn-primary">Refuser la demande</label>
+          </div>
+
+          <!-- Modal accept request -->
+          <input type="checkbox" :id="'accept' + data.id" class="modal-toggle" />
+          <div class="modal">
+            <div class="modal-box">
+              <h3 class="font-bold text-lg">Êtes-vous sûr de vouloir accepter cette demande d'adoption ?</h3>
+                <p class="text-warning"><strong>Cette action est irreversible.</strong></p>
+              <div class="modal-action">
+                <button @click="acceptLike(data.id)" class="btn">Accepter</button>
+                <label :for="'accept' + data.id" class="btn">Annuler</label>
+              </div>
+            </div>
+          </div>
+
+        <!-- Modal reject request -->
+          <input type="checkbox" :id="'reject' + data.id" class="modal-toggle" />
+          <div class="modal">
+            <div class="modal-box">
+              <h3 class="font-bold text-lg">Êtes-vous sûr de vouloir refuser cette demande d'adoption ?</h3>
+                <p class="text-warning"><strong>Cette action est irreversible.</strong></p>
+              <div class="modal-action">
+                <button @click="rejectLike(data.id)" class="btn">Refuser</button>
+                <label :for="'reject' + data.id" class="btn">Annuler</label>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-
-    <div class="card lg:card-side bg-base-100 shadow-xl">
-      <figure><img src="https://st2.depositphotos.com/1662991/8837/i/450/depositphotos_88370500-stock-photo-mechanic-wearing-overalls.jpg" alt="adopteur"/></figure>
-      <div class="card-body">
-        <h2 class="card-title">{{ data.userId.lastname }} {{ data.userId.firstname }}</h2>
-        <p> {{ data.userId.city }}</p>
-        <p>{{ data.userId.description }}</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="container-button">
-    <label :for="'accept' + data.id" class="btn btn-accent">Accepter la demande</label>
-    <label :for="'reject' + data.id" class="btn btn-primary">Refuser la demande</label>
-  </div>
-
-  <!-- Modal accept request -->
-  <input type="checkbox" :id="'accept' + data.id" class="modal-toggle" />
-  <div class="modal">
-    <div class="modal-box">
-      <h3 class="font-bold text-lg">Êtes-vous sûr de vouloir accepter cette demande d'adoption ?</h3>
-        <p class="text-warning"><strong>Cette action est irreversible.</strong></p>
-      <div class="modal-action">
-        <button @click="acceptLike(data.id)" class="btn">Accepter</button>
-        <label :for="'accept' + data.id" class="btn">Annuler</label>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal reject request -->
-  <input type="checkbox" :id="'reject' + data.id" class="modal-toggle" />
-  <div class="modal">
-    <div class="modal-box">
-      <h3 class="font-bold text-lg">Êtes-vous sûr de vouloir refuser cette demande d'adoption ?</h3>
-        <p class="text-warning"><strong>Cette action est irreversible.</strong></p>
-      <div class="modal-action">
-        <button @click="rejectLike(data.id)" class="btn">Refuser</button>
-        <label :for="'reject' + data.id" class="btn">Annuler</label>
-      </div>
-    </div>
-  </div>
+  </main>
 </template>
 
 <style scoped>
@@ -104,12 +114,15 @@ h1 {
 
 img {
   width: 100%;
+  max-height: 160%;
+  min-height: 100%;
 }
 
 .container-info {
   margin-top: 5%;
   display: flex;
   justify-content: space-between;
+  gap: 20px;
 }
 
 .container-button {

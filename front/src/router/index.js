@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import jwt_decode from 'jwt-decode';
-import HomeView from '../views/HomeView.vue'
+import { getUserInfo } from '../services/rateUserService';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,6 +38,24 @@ const router = createRouter({
       name: "confirmAccount",
       path: "/confirmAccount",
       component: () => import("../views/security/ConfirmAccountView.vue"),
+    },
+    {
+      path: '/backOffice/review',
+      name: 'backOffice',
+      component: () => import('../views/ReviewBO.vue'),
+      meta:{
+        isAuth: true,
+        authorize: "ROLE_SPA", 
+      }
+    },
+    {
+      path: "/backOffice/review/:id",
+      name: "rateUser",
+      component: () => import('../views/RateUserBO.vue'),
+      meta:{
+        isAuth: true,
+        authorize: "ROLE_SPA",
+      }
     }
   ]
 })
