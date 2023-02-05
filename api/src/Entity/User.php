@@ -69,7 +69,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Assert\NotBlank]
     #[Assert\Email]
-    #[Groups(['user:read', 'user:create', 'user:update','user:register:read','user:register:create'])]
+    #[Groups(['user:read', 'user:create', 'user:update','user:register:read','user:register:create', 'like:read'])]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
@@ -130,7 +130,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $donations;
 
     #[ORM\ManyToOne(inversedBy: 'users', targetEntity: Spa::class)]
-    #[Groups(['user:read', 'user:update'])]
+    #[Groups(['user:read', 'user:update', 'like:read'])]
     private ?Spa $spa = null;
 
     #[Groups(['user:read'])]

@@ -9,24 +9,17 @@ const getLikeId = async(id) => {
   const responseGetLikeId = await getLikesId(id);
   const likeGetId = await responseGetLikeId.json();
   data.value = likeGetId;
-  console.log(data.value);
 }
 
-const accpetLike = async(id) => {
+const acceptLike = async(id) => {
   const responsePatchLike = await patchAcceptLikes(id);
   const likePatch = await responsePatchLike.json();
-  // data.value = likePatch['hydra:member'];
-  // console.log("testestesPAtch");
-  console.log(likePatch);
   redirectToAllAnimalsLike();
 }
 
 const rejectLike = async(id) => {
   const responseRefuseLike = await patchRejectLikes(id);
   const likeRefusePatch = await responseRefuseLike.json();
-  // data.value = likePatch['hydra:member'];
-  // console.log("testestesPAtch");
-  console.log(likeRefusePatch);
   redirectToAllAnimalsLike();
 }
 
@@ -49,14 +42,12 @@ getLikeId(idUrl);
         <h2 class="card-title">{{ data.animalId.name }}</h2>
         <p>{{ new Date(data.animalId.birthday).getDate() + '/' + (new Date(data.animalId.birthday).getMonth() + 1) + '/' + new Date(data.animalId.birthday).getFullYear() }}</p>
         <p>{{ new Date().getFullYear() - new Date(data.animalId.birthday).getFullYear() + ' ans'}}</p>
-        <!-- new Date().getDate() -  new Date(data.animalId.birthday).getDate() + '/' + new Date().getDate() - (new Date(data.animalId.birthday).getMonth() + 1) + '/' + new Date().getDate() - new Date(data.animalId.birthday).getFullYear() -->
         <p><strong>Ville de naissance :</strong> {{ data.animalId.birthLocation }}</p>
         <p>{{ data.animalId.description }}</p>
       </div>
     </div>
 
     <div class="card lg:card-side bg-base-100 shadow-xl">
-      <!-- <figure><img v-bind:src="`${data.userId.picture}`" alt="adopteur"/></figure> -->
       <figure><img src="https://st2.depositphotos.com/1662991/8837/i/450/depositphotos_88370500-stock-photo-mechanic-wearing-overalls.jpg" alt="adopteur"/></figure>
       <div class="card-body">
         <h2 class="card-title">{{ data.userId.lastname }} {{ data.userId.firstname }}</h2>
@@ -67,8 +58,34 @@ getLikeId(idUrl);
   </div>
 
   <div class="container-button">
-    <button @click="accpetLike(data.id)" class="btn btn-accent">Accepter la demande</button>
-    <button @click="rejectLike(data.id)" class="btn btn-primary">Refuser la demande</button>
+    <label :for="'accept' + data.id" class="btn btn-accent">Accepter la demande</label>
+    <label :for="'reject' + data.id" class="btn btn-primary">Refuser la demande</label>
+  </div>
+
+  <!-- Modal accept request -->
+  <input type="checkbox" :id="'accept' + data.id" class="modal-toggle" />
+  <div class="modal">
+    <div class="modal-box">
+      <h3 class="font-bold text-lg">Êtes-vous sûr de vouloir accepter cette demande d'adoption ?</h3>
+        <p class="text-warning"><strong>Cette action est irreversible.</strong></p>
+      <div class="modal-action">
+        <button @click="acceptLike(data.id)" class="btn">Accepter</button>
+        <label :for="'accept' + data.id" class="btn">Annuler</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal reject request -->
+  <input type="checkbox" :id="'reject' + data.id" class="modal-toggle" />
+  <div class="modal">
+    <div class="modal-box">
+      <h3 class="font-bold text-lg">Êtes-vous sûr de vouloir refuser cette demande d'adoption ?</h3>
+        <p class="text-warning"><strong>Cette action est irreversible.</strong></p>
+      <div class="modal-action">
+        <button @click="rejectLike(data.id)" class="btn">Refuser</button>
+        <label :for="'reject' + data.id" class="btn">Annuler</label>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -101,6 +118,11 @@ img {
   justify-content: space-around;
   margin-top: 5%;
   margin-left: 25%;
+}
+
+.text-warning {
+  text-align: center;
+  margin-top: 5%;
 }
 
 

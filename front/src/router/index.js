@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import jwt_decode from 'jwt-decode';
 import HomeView from '../views/HomeView.vue'
-import SpaBoView from '../views/SpaBoView.vue'
-import SpaLikeIdView from '../views/SpaLikeIdView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,12 +13,16 @@ const router = createRouter({
     {
       path: '/AllAnimalsLike',
       name: 'animalsLike',
-      component: SpaBoView
+      component: () => import('../views/SpaBoView.vue'),
+      meta:{
+        isAuth: true,
+        authorize: "ROLE_SPA", 
+      }
     },
     {
       path: '/likes/:id',
       name: 'likeId',
-      component: SpaLikeIdView
+      component: () => import('../views/SpaLikeIdView.vue'),
     },
     {
       name: "register",
@@ -37,6 +40,29 @@ const router = createRouter({
       component: () => import("../views/security/ConfirmAccountView.vue"),
     }
   ]
+})
+
+router.beforeEach((to, from, next)=>{
+  if(to.matched.some(record => record.meta.isAuth)){
+    let token = localStorage.getItem('token')
+    if(!token){
+      next('/login')
+    }
+  }
+
+  if(to.matched.some(record => record.meta.authorize)){
+    let token = localStorage.getItem('token')
+    let connectedUser = jwt_decode(token)
+    let roleUser = connectedUser.roles;
+    let isAuthorize = roleUser.includes('ROLE_SPA');
+
+    if(!isAuthorize){
+      next('/login')
+    }
+
+  }
+
+  next()
 })
 
 export default router

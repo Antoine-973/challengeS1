@@ -5,6 +5,13 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\LikeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use App\Controller\LikeUserCustomController;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: LikeRepository::class)]
@@ -12,6 +19,20 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     normalizationContext: ['groups' => ['like:read']],
     denormalizationContext: ['groups' => ['like:create', 'like:update']],
+    operations: [
+        new GetCollection(),
+        new Get(),
+        new Post(),
+        new Patch(
+            uriTemplate: '/likes/{id}',
+            controller: LikeUserCustomController::class,
+            normalizationContext: ['groups' => 'like:read'],
+            denormalizationContext: ['groups' => 'like:update'],
+            name: 'sendLikeUser'
+        ),
+        new Put(),
+        new Delete(),
+    ]
 )]
 class Like
 {
