@@ -6,30 +6,44 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ReviewRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['review:read']]
+)]
+
 class Review
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['review:read'])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['review:read'])]
     private ?int $rate = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['review:read'])]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'reviews')]
+    #[Groups(['review:read'])]
     private ?Spa $spa = null;
 
     #[ORM\ManyToOne(inversedBy: 'reviews')]
+    #[Groups(['review:read'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'reviews')]
+    #[Groups(['review:read'])]
     private ?User $spaUser = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['review:read'])]
+    private ?bool $isValidate = null;
 
     public function getId(): ?int
     {
@@ -92,6 +106,18 @@ class Review
     public function setSpaUser(?User $spaUser): self
     {
         $this->spaUser = $spaUser;
+
+        return $this;
+    }
+
+    public function isIsValidate(): ?bool
+    {
+        return $this->isValidate;
+    }
+
+    public function setIsValidate(?bool $isValidate): self
+    {
+        $this->isValidate = $isValidate;
 
         return $this;
     }
