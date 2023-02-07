@@ -30,11 +30,11 @@ const getConnectedUser = async(id) => {
   connectedUser = jwt_decode(token);
 }
 
-const patchAcceptLike = async(id) => {
-  const responsePatchLike = await patchAcceptLikes(id);
+const patchAcceptLike = async(id, user) => {
+  const responsePatchLike = await patchAcceptLikes(id, user);
   const likePatch = await responsePatchLike.json();
   console.log(likePatch);
-  window.location.href = "/AllAnimalsLike";
+  // window.location.href = "/AllAnimalsLike";
   updateLike(id);
 }
 
@@ -108,7 +108,7 @@ getUserConnected(connectedUser.id);
                     </div>
                       <p class="text-warning"><strong>Cette action est irreversible.</strong></p>
                     <div class="modal-action">
-                      <button @click="patchAcceptLike(like.id)" class="btn">Accepter</button>
+                      <button @click="patchAcceptLike(like.id, like.userId.email)" class="btn">Accepter</button>
                       <label :for="'accept' + like.id" class="btn">Annuler</label>
                     </div>
                   </div>

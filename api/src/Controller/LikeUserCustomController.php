@@ -19,34 +19,33 @@ use App\Repository\UserRepository;
 #[AsController]
 class LikeUserCustomController extends AbstractController
 {
-  private $em;
-  private $emailServices;
-  private $userRepository;
 
-  public function __construct(EntityManagerInterface $entityManager, EmailService $emailService, LikeRepository $likeRepository, UserRepository $userRepository)
-  {
-    $this->em = $entityManager;
+  public function __construct(EntityManagerInterface $entityManager, EmailService $emailService, LikeRepository $likeRepository) {
+    $this->em = $entityManager ;
     $this->emailServices = $emailService;
     $this->likeRepository = $likeRepository;
-    $this->userRepository = $userRepository;
   }
 
   /**
    * @throws TransportExceptionInterface
    */
-  public function __invoke(Request $request): Like
+  public function __invoke(Request $request)
   {
-
-    // $data = $request->toArray();
-    // dd($data);
+    // $data = $request;
+    // var_dump($data->get('id'));
+    $data = $request;
+    var_dump($data);
+    // return $request;
     // $user = $this->$userRepository->findOneBy(['email' => "wirev33383@bymercy.com"]);
     // $like = $this->$likeRepository->findOneBy(['id' => $data['id']]);
-    return $this->emailServices->sendMail(
+    $this->emailServices->sendMail(
       'sales.playz@gmail.com',
-      "wirev33383@bymercy.com",
+      'dediyo3367@bymercy.com',
       'Demande d\'adoption acceptée',
       '<p>Votre demande d\'adoption a été accepté. Prenez rendez-vous pour rencontrer votre futur animal</p>'
     );
+
+    return $data;
 
     // return $data;
     // return $data->getUserId();

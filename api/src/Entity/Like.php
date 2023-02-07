@@ -101,7 +101,7 @@ class Like
 
         return $this;
     }
-    #[Groups(['like:read'])]
+    #[Groups(['like:read', 'like:update'])]
     public function getUserId(): ?User
     {
         return $this->user;
