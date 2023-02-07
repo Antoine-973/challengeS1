@@ -144,6 +144,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'users', targetEntity: ResetPassword::class)]
     private Collection $resetPasswords;
 
+    #[Groups(['user:read', 'user:update'])]
+    #[ORM\Column(nullable: true)]
+    private ?bool $isBan = null;
+
     public function __construct()
     {
         $this->likes = new ArrayCollection();
@@ -504,6 +508,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $resetPassword->setUsers(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isIsBan(): ?bool
+    {
+        return $this->isBan;
+    }
+
+    public function setIsBan(?bool $isBan): self
+    {
+        $this->isBan = $isBan;
 
         return $this;
     }

@@ -1,6 +1,6 @@
 <script setup>
 import Menu from "../../components/TemplateBO.vue";
-import { getReviewById, DeleteReview, ValidateReview } from '../../services/adminService';
+import { getReviewById, RefuseReview, ValidateReview, getAllReviews, BanUser, GetUser} from '../../services/adminService';
 import { Field } from 'vee-validate';
 import { ref } from 'vue'
 
@@ -12,6 +12,7 @@ const userRatedInfo = ref(null);
 const userWhoRate = ref(null);
 let responseStatusRefuse = ref(false);
 let responseStatusValidate = ref(false);
+const toBan = ref([]);
 
 let isAlreadyValidate = ref(false);
 
@@ -31,9 +32,9 @@ const getReview = async(id) => {
 }
 
 const RefuseComment = async(id) => {
-    const response = await DeleteReview(id);
+    const response = await RefuseReview(id);
     
-    if(response.status === 204){
+    if(response.status === 200){
         responseStatusRefuse.value = true;
         setTimeout(() => {
             window.location.href = '/backOffice/admin'
@@ -48,6 +49,7 @@ const ValidateComment = async(id) => {
     
     if(response.status === 200){
         responseStatusValidate.value = true;
+        AutoBan();
         setTimeout(() => {
             window.location.href = '/backOffice/admin'
         }, 2000)
@@ -56,6 +58,99 @@ const ValidateComment = async(id) => {
     console.log(response.status);
 }
 
+const AutoBan = async() => {
+    // Appeler cette fonction dès qu'une review est acceptée pour recompter les reviews
+
+    // 1 recup toutes les reviews avec le is validate à true et notes sup ou = à 3 DONE
+    // 2 compter les reviews qui ont le même id DONE
+    // 3 quand on à un user avec 5 reviews on déclenche le traitement DONE
+    // 4 traitement = passer le isBan dans user (le créer) à true DONE
+    // Avant de bannir l'utilisateur, vérifier qu'il n'est pas déjà ban DONE
+
+    // 5 dans le traitement, récupérer le mail du user en question et lui envoyer un mail
+    // 6 Lui bloquer les accès
+
+    let idTab = [];
+    let occurences = {};
+    let usersToBan = [];
+    const responseGetReviews = await getAllReviews();
+    const data = await responseGetReviews.json();
+    const allReviews = data['hydra:member'];
+
+    const validateReviews = allReviews.filter(el => el.rate <= 3 && el.isValidate == true); // parcourir le tableau
+
+    validateReviews.map((el) =>{
+        console.log(el);
+        console.log(el.user.id)
+        idTab.push(el.user.id);
+    }) // On récupère les id utilisateur et on les met dans un tableau
+
+    idTab.forEach(function(elem){
+        if(elem in occurences){
+            occurences[elem] = ++ occurences[elem];
+        }
+        else{
+            occurences[elem] = 1
+        }
+    }); // on parcours le tableau d'id pour compter le nombre d'occurence et on les enregistre dans occurences
+
+    for(let i in occurences){
+        if(occurences[i] == 5){
+            console.log(i);
+            console.log(occurences[i]);
+            usersToBan.push(i);
+
+            // toBan.value.push(i);
+            // console.log(toBan.value);
+        }
+    } // on parcours occurences et on enregistre l'id utilisateur quand le nb d'occurence est égal à 5
+    
+
+    if(usersToBan.length > 0){
+        //appel api pour chaque id du tableau
+
+        // banUser(usersToBan);
+
+        usersToBan.forEach(function(el){
+            console.log(el);
+            CallBanUser(el);
+            // const result = ban.json();
+            // console.log(result)
+        })
+    }
+    console.log(usersToBan.length);
+
+    console.log(idTab);
+    console.log(occurences);
+    console.log(usersToBan);
+
+}
+
+const CallBanUser = async (id) =>{
+    // id = parseInt(id);
+    // console.log(typeof(id));
+
+    const user = await GetUser(id);
+    const data = await user.json();
+    console.log(data.isBan);
+    // data.foreach(function(el){
+    //     console.log(el.isBan);
+    // })
+
+    // for(let el in data){
+    //     console.log(el);
+    // }
+
+    console.log(typeof(data.isBan));
+
+    if( typeof(data.isBan) == 'undefined' || data.isBan === false){
+        const responseBan = await BanUser(id);
+        const donnee = responseBan;
+    }
+
+}
+
+// AutoBan();
 getReview(idReview);
 
 </script>

@@ -12,7 +12,7 @@ const getReviews = async() => {
     reviews.value = data['hydra:member'];
 
     filteredReviews.value = reviews.value.filter(el => el.rate <= 3 && el.isValidate == null);
-    console.log(filteredReviews);
+    // console.log(filteredReviews);
 }
 
 getReviews();
