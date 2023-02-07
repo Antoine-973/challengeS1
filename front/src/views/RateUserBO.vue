@@ -47,6 +47,9 @@
         const responseSubmit = await rateUser(idUser, rate, formData.message, connectedUser.id, connectedUserSpaId);
         if(responseSubmit.status === 201){
             apiResponseStatus.value = true;
+            setTimeout(() => {
+                window.location.href = '/backOffice/review'
+            }, 2000)
         }
     }
 
@@ -91,8 +94,19 @@
                     <Field as="textarea" name="description" class="w-3/4 mt-11 h-40" rules="required" v-model="formData.message"/>
                        
 
+                    <input type="checkbox" id="my-modal" class="modal-toggle" />
+                    <div class="modal">
+                        <div class="modal-box">
+                            <h3 class="font-bold text-lg">Êtes-vous sûr de vouloir envoyer ce commentaire ?</h3>
+                            <p class="py-4">Cette action est irréversible.</p>
+                            <div class="modal-action">
+                                <label for="my-modal" class="btn">Annuler</label>
+                                <button class="btn btn-success" type="submit">Envoyer</button> 
+                            </div>
+                        </div>
+                    </div>
 
-                    <button class="btn btn-primary w-24 mt-16" type="submit">Envoyer</button> 
+                    <label for="my-modal" class="btn btn-primary w-24 mt-16">Envoyer</label>
                 </Form>
 
             </div>
