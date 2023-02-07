@@ -2,6 +2,7 @@ import {basePath} from "./basePath";
 const path = basePath + 'reviews' ;
 const pathReviews = basePath + 'reviews/';
 const pathUser = basePath + 'users/';
+const pathBan = basePath + 'api/banUser/'
 
 
 export const getAllReviews = async () => {
@@ -43,7 +44,7 @@ export const ValidateReview = async (id) => {
 }
 
 export const BanUser = async (id) => {
-    return await fetch(pathUser + id, {
+    return await fetch(pathBan + id, {
         method: 'PATCH',
         headers:{
             'Content-Type': 'application/merge-patch+json',
