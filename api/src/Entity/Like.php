@@ -5,14 +5,17 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\LikeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use App\Controller\AcceptLikeUserCustomController;
+use App\Controller\RejectLikeUserCustomController;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Controller\ReviewController;
 use App\Controller\LikesController;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Put;
-use ApiPlatform\Metadata\Delete;
 
 #[ORM\Entity(repositoryClass: LikeRepository::class)]
 #[ORM\Table(name: '`like`')]
@@ -29,7 +32,19 @@ use ApiPlatform\Metadata\Delete;
         ),
         new Post(),
         new Delete(),
-        new Patch(),
+        new Patch(
+            uriTemplate: '/acceptlikes/{id}',
+            controller: AcceptLikeUserCustomController::class,
+            normalizationContext: ['groups' => 'like:read'],
+            denormalizationContext: ['groups' => 'like:update'],
+            name: 'sendEmailLikeUser'
+        ),
+        new Patch(
+            controller: RejectLikeUserCustomController::class,
+            normalizationContext: ['groups' => 'like:read'],
+            denormalizationContext: ['groups' => 'like:update'],
+            name: 'RejectLikeUser'
+        ),
         new Put(),
         new Get(),
         new Get(
@@ -46,24 +61,23 @@ class Like
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['like:read', 'like:update'])]
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Groups(['like:read'])]
+    #[Groups(['like:read', 'like:update'])]
     private ?bool $isPending = true;
 
     #[ORM\Column]
-    #[Groups(['like:read'])]
+    #[Groups(['like:read', 'like:update'])]
     private ?bool $isValidate = false;
 
     #[ORM\ManyToOne(inversedBy: 'likes')]
-    #[Groups(['like:read'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'likes')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['like:read'])]
     private ?Animal $animal = null;
 
     public function getId(): ?int
@@ -94,8 +108,7 @@ class Like
 
         return $this;
     }
-
-    #[Groups(['like:read'])]
+    #[Groups(['like:read', 'like:update'])]
     public function getUserId(): ?User
     {
         return $this->user;
@@ -107,7 +120,6 @@ class Like
 
         return $this;
     }
-
     #[Groups(['like:read'])]
     public function getAnimalId(): ?Animal
     {

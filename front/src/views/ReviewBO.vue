@@ -58,7 +58,7 @@
                             <th>1</th>
                             <td>{{ user.userId.lastname }}</td>
                             <td>{{ user.userId.firstname }}</td>
-                            <td><a :href="'/backOffice/review/' + user.userId.id"><i class="fa-regular fa-pen"></i></a></td>
+                            <td><a :href="'/backOffice/review/' + user.userId.id"><i class="fas fa-pen"></i></a></td>
                         </tr>
                     </tbody>
                 </table>

@@ -76,7 +76,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Assert\NotBlank]
     #[Assert\Email]
-    #[Groups(['user:read', 'user:create', 'user:update','user:register:read','user:register:create'])]
+    #[Groups(['user:read', 'user:create', 'user:update','user:register:read','user:register:create', 'like:read', 'like:update'])]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
@@ -101,16 +101,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:create','user:read', 'user:update', 'user:register:read','user:register:create'])]
+    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create', 'user:read', 'like:read'])]
     private ?string $city = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:create','user:read', 'user:update', 'user:register:read','user:register:create'])]
+    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create', 'user:read', 'like:read'])]
     private ?string $description = null;
 
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:update', 'user:read'])]
+    #[Groups(['user:update', 'user:read', 'like:read'])]
     private ?string $picture = null;
 
     #[ORM\Column]
@@ -137,7 +137,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $donations;
 
     #[ORM\ManyToOne(inversedBy: 'users', targetEntity: Spa::class)]
-    #[Groups(['user:read', 'user:update'])]
+    #[Groups(['user:read', 'user:update', 'like:read'])]
     private ?Spa $spa = null;
 
     #[Groups(['user:read'])]

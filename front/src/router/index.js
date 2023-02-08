@@ -11,6 +11,20 @@ const router = createRouter({
       component: () => import('../views/HomeView.vue')
     },
     {
+      path: '/AllAnimalsLike',
+      name: 'animalsLike',
+      component: () => import('../views/SpaBoView.vue'),
+      meta:{
+        isAuth: true,
+        authorize: "ROLE_SPA", 
+      }
+    },
+    {
+      path: '/likes/:id',
+      name: 'likeId',
+      component: () => import('../views/SpaLikeIdView.vue'),
+    },
+    {
       name: "register",
       path: "/register",
       component: () => import("../views/security/RegisterView.vue"),

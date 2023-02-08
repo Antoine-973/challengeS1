@@ -29,25 +29,31 @@ class Animal
     private ?\DateTimeInterface $birthday = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['like:read'])]
     private ?string $birthLocation = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['like:read'])]
     private ?string $description = null;
 
     #[ORM\Column]
     private ?bool $isSterilize = null;
 
     #[ORM\OneToMany(mappedBy: 'animal', targetEntity: Like::class, orphanRemoval: true)]
+    #[Groups(['like:read'])]
     private Collection $likes;
 
     #[ORM\ManyToOne(inversedBy: 'animals')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['like:read'])]
     private ?Species $species = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Groups(['like:read'])]
     private ?int $sex = null;
 
     #[ORM\ManyToMany(targetEntity: Breed::class, inversedBy: 'animals')]
+    #[Groups(['like:read'])]
     private Collection $breeds;
 
     #[ORM\ManyToOne(inversedBy: 'animals')]
@@ -55,9 +61,11 @@ class Animal
     private ?Spa $spa = null;
 
     #[ORM\ManyToMany(targetEntity: Behaviour::class, inversedBy: 'animals')]
+    #[Groups(['like:read'])]
     private Collection $behaviours;
 
     #[ORM\OneToMany(mappedBy: 'animal', targetEntity: AnimalPicture::class, orphanRemoval: true)]
+    #[Groups(['like:read'])]
     private Collection $animalPictures;
 
     public function __construct()
