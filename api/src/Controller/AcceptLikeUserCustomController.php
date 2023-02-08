@@ -17,8 +17,12 @@ use App\Repository\LikeRepository;
 use App\Repository\UserRepository;
 
 #[AsController]
-class LikeUserCustomController extends AbstractController
+class AcceptLikeUserCustomController extends AbstractController
 {
+
+  private $em ;
+  private $emailServices ;
+  private $likeRepository ;
 
   public function __construct(EntityManagerInterface $entityManager, EmailService $emailService, LikeRepository $likeRepository) {
     $this->em = $entityManager ;
@@ -31,25 +35,19 @@ class LikeUserCustomController extends AbstractController
    */
   public function __invoke(Request $request)
   {
-    // $data = $request;
-    // var_dump($data->get('id'));
-    $data = $request;
-    var_dump($data);
-    // return $request;
-    // $user = $this->$userRepository->findOneBy(['email' => "wirev33383@bymercy.com"]);
-    // $like = $this->$likeRepository->findOneBy(['id' => $data['id']]);
+    $data = $request->get('id');
+    $like = $this->likeRepository->findOneBy(['id' => $data]);
+    $like->setIsPending(false);
+    $like->setIsValidate(true);
     $this->emailServices->sendMail(
       'sales.playz@gmail.com',
-      'dediyo3367@bymercy.com',
+      $like->getUserId()->getEmail(),
       'Demande d\'adoption acceptée',
-      '<p>Votre demande d\'adoption a été accepté. Prenez rendez-vous pour rencontrer votre futur animal</p>'
+      '<p>Bonjour '.$like->getUserId()->getFirstName().' '.$like->getUserId()->getLastName().',<br/><br/>
+      C\'est avec joie que nous vous annonçons que votre demande d\'adoption a été accepté. Prenez rendez-vous pour rencontrer votre futur animal :)</p><br/><br/>
+      <p>L\'équipe SPAdoption</p>'
     );
 
-    return $data;
-
-    // return $data;
-    // return $data->getUserId();
-    // $like = $this->$likeRepository->findOneBy(['id' => $data['id']]);
-    // return $user;
+    return $like;
   }
 }

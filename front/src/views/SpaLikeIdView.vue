@@ -54,7 +54,7 @@ getLikeId(idUrl);
             </div>
 
             <div class="card lg:card-side bg-base-100 shadow-xl">
-              <figure><img v-bind:src="`${data.userId.picture}`" alt="adopteur"/></figure>
+              <figure><img src="https://st2.depositphotos.com/1662991/8837/i/450/depositphotos_88370500-stock-photo-mechanic-wearing-overalls.jpg" alt="adopteur"/></figure>
               <div class="card-body">
                 <h2 class="card-title">{{ data.userId.lastname }} {{ data.userId.firstname }}</h2>
                 <p> {{ data.userId.city }}</p>

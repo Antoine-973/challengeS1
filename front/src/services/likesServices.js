@@ -12,33 +12,29 @@ export const getLikesId = async (id) => {
 }
 
 export const patchAcceptLikes = async (id, emailUser) => {
-  console.log(emailUser);
-  return await fetch(pathLikes + '/' + id, {
-    method: 'PUT',
+  return await fetch(basePath + 'acceptlikes/' + id, {
+    method: 'PATCH',
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
+      "Content-Type": "application/merge-patch+json",
     },
     body: JSON.stringify({
       isPending: false,
       isValidate: true,
-      user: {
-        email: emailUser
-      }
+      email: emailUser
     })
   });
 }
 
-export const patchRejectLikes = async (id) => {
+export const patchRejectLikes = async (id, emailUser) => {
   return await fetch(pathLikes + '/' + id, {
-    method: 'PUT',
+    method: 'PATCH',
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
+      "Content-Type": "application/merge-patch+json",
     },
     body: JSON.stringify({
       isPending: false,
-      isValidate: false
+      isValidate: false,
+      email: emailUser
     })
   });
 }

@@ -11,7 +11,8 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use App\Controller\LikeUserCustomController;
+use App\Controller\AcceptLikeUserCustomController;
+use App\Controller\RejectLikeUserCustomController;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Controller\ReviewController;
 use App\Controller\LikesController;
@@ -32,11 +33,17 @@ use App\Controller\LikesController;
         new Post(),
         new Delete(),
         new Patch(
-            uriTemplate: '/likes/{id}',
-            controller: LikeUserCustomController::class,
+            uriTemplate: '/acceptlikes/{id}',
+            controller: AcceptLikeUserCustomController::class,
             normalizationContext: ['groups' => 'like:read'],
             denormalizationContext: ['groups' => 'like:update'],
-            name: 'sendLikeUser'
+            name: 'sendEmailLikeUser'
+        ),
+        new Patch(
+            controller: RejectLikeUserCustomController::class,
+            normalizationContext: ['groups' => 'like:read'],
+            denormalizationContext: ['groups' => 'like:update'],
+            name: 'RejectLikeUser'
         ),
         new Put(),
         new Get(),
