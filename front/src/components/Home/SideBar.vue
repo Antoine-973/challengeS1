@@ -1,4 +1,8 @@
-<script setup></script>
+<script setup>
+import {inject} from 'vue' ;
+
+const user = inject('AuthProvider:user') ;
+</script>
 
 <template>
     <main>
@@ -9,7 +13,7 @@
                         <img src="https://placeimg.com/192/192/people" />
                     </div>
                 </div>
-                <div>John Doe</div>
+                <div>{{user.firstname}} {{user.lastname}}</div>
                 <div class="avatar">
                     <div class="avatar placeholder">
                         <div class="bg-white text-neutral-content rounded-full w-8">

@@ -14,12 +14,11 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\ConfirmAccountController;
 use App\Controller\RegisterCustomController;
-use cebe\openapi\spec\Parameter;
-use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use App\State\UserPasswordHasher;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -129,7 +128,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read',  'user:update'])]
     private Collection $donations;
 
-    #[ORM\ManyToOne(inversedBy: 'users', targetEntity: Spa::class)]
+    #[ORM\ManyToOne(targetEntity: Spa::class, inversedBy: 'users')]
     #[Groups(['user:read', 'user:update'])]
     private ?Spa $spa = null;
 
@@ -370,7 +369,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->likes->contains($like)) {
             $this->likes->add($like);
-            $like->setUserId($this);
+            $like->setUser($this);
         }
 
         return $this;
@@ -380,8 +379,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->likes->removeElement($like)) {
             // set the owning side to null (unless already changed)
-            if ($like->getUserId() === $this) {
-                $like->setUserId(null);
+            if ($like->getUser() === $this) {
+                $like->setUser(null);
             }
         }
 
@@ -400,7 +399,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->donations->contains($donation)) {
             $this->donations->add($donation);
-            $donation->setUserId($this);
+            $donation->setUser($this);
         }
 
         return $this;
@@ -410,8 +409,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->donations->removeElement($donation)) {
             // set the owning side to null (unless already changed)
-            if ($donation->getUserId() === $this) {
-                $donation->setUserId(null);
+            if ($donation->getUser() === $this) {
+                $donation->setUser(null);
             }
         }
 
@@ -430,7 +429,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->agendas->contains($agenda)) {
             $this->agendas->add($agenda);
-            $agenda->setUserId($this);
+            $agenda->setUser($this);
         }
 
         return $this;
@@ -440,8 +439,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->agendas->removeElement($agenda)) {
             // set the owning side to null (unless already changed)
-            if ($agenda->getUserId() === $this) {
-                $agenda->setUserId(null);
+            if ($agenda->getUser() === $this) {
+                $agenda->setUser(null);
             }
         }
 
@@ -460,7 +459,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->reviews->contains($review)) {
             $this->reviews->add($review);
-            $review->setUserId($this);
+            $review->setUser($this);
         }
 
         return $this;
@@ -470,8 +469,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->reviews->removeElement($review)) {
             // set the owning side to null (unless already changed)
-            if ($review->getUserId() === $this) {
-                $review->setUserId(null);
+            if ($review->getUser() === $this) {
+                $review->setUser(null);
             }
         }
 
