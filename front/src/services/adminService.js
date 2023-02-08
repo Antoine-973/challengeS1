@@ -1,6 +1,8 @@
 import {basePath} from "./basePath";
 const path = basePath + 'reviews' ;
-const pathReviews = basePath + 'reviews/'
+const pathReviews = basePath + 'reviews/';
+const pathUser = basePath + 'users/';
+const pathBan = basePath + 'api/banUser/'
 
 
 export const getAllReviews = async () => {
@@ -16,10 +18,16 @@ export const getReviewById = async (id) => {
 };
 
 
-export const DeleteReview = async (id) => {
+export const RefuseReview = async (id) => {
 
     return await fetch(pathReviews + id, {
-      method: 'DELETE',
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/merge-patch+json',
+      },
+      body: JSON.stringify({
+        isValidate: false
+      })
     });
 }
 
@@ -32,6 +40,22 @@ export const ValidateReview = async (id) => {
         body: JSON.stringify({
             isValidate: true
         })
+    })
+}
 
+export const BanUser = async (id) => {
+    return await fetch(pathBan + id, {
+        method: 'PATCH',
+        headers:{
+            'Content-Type': 'application/merge-patch+json',
+        },
+        body: JSON.stringify({
+            isBan: true
+        })
+    })
+}
+
+export const GetUser = async (id) => {
+    return await fetch(pathUser + id, {
     })
 }

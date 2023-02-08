@@ -1,6 +1,6 @@
 <script setup>
 import Menu from "../../components/TemplateBO.vue";
-import { getReviewById, DeleteReview, ValidateReview } from '../../services/adminService';
+import { getReviewById, RefuseReview, ValidateReview, getAllReviews, BanUser, GetUser} from '../../services/adminService';
 import { Field } from 'vee-validate';
 import { ref } from 'vue'
 
@@ -31,16 +31,14 @@ const getReview = async(id) => {
 }
 
 const RefuseComment = async(id) => {
-    const response = await DeleteReview(id);
+    const response = await RefuseReview(id);
     
-    if(response.status === 204){
+    if(response.status === 200){
         responseStatusRefuse.value = true;
         setTimeout(() => {
             window.location.href = '/backOffice/admin'
         }, 2000)
     }
-
-    console.log(response.status);
 }
 
 const ValidateComment = async(id) => {
@@ -48,12 +46,61 @@ const ValidateComment = async(id) => {
     
     if(response.status === 200){
         responseStatusValidate.value = true;
+        AutoBan();
         setTimeout(() => {
             window.location.href = '/backOffice/admin'
         }, 2000)
     }
+}
 
-    console.log(response.status);
+const AutoBan = async() => {
+
+    let idTab = [];
+    let occurences = {};
+    let usersToBan = [];
+    const responseGetReviews = await getAllReviews();
+    const data = await responseGetReviews.json();
+    const allReviews = data['hydra:member'];
+
+    const validateReviews = allReviews.filter(el => el.rate <= 3 && el.isValidate == true);
+
+    validateReviews.map((el) =>{
+        idTab.push(el.user.id);
+    })
+
+    idTab.forEach(function(elem){
+        if(elem in occurences){
+            occurences[elem] = ++ occurences[elem];
+        }
+        else{
+            occurences[elem] = 1
+        }
+    });
+
+    for(let i in occurences){
+        if(occurences[i] == 5){
+            usersToBan.push(i);
+        }
+    }
+    
+
+    if(usersToBan.length > 0){
+        usersToBan.forEach(function(el){
+            CallBanUser(el);
+        })
+    }
+
+}
+
+const CallBanUser = async (id) =>{
+
+    const user = await GetUser(id);
+    const data = await user.json();
+
+    if( typeof(data.isBan) == 'undefined' || data.isBan === false){
+        await BanUser(id);
+    }
+
 }
 
 getReview(idReview);
