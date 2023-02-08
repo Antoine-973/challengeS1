@@ -141,22 +141,3 @@ img {
 
 
 </style>
-
-<!-- <div class="container-info">
-    <div>
-      <h2>Information sur l'animal</h2>
-      <img v-bind:src="`${data.animal_id.picture}`"/>
-      <p><strong>Nom :</strong> {{ data.animal_id.name }}</p>
-      <p><strong>Date de naissance :</strong> {{ data.animal_id.birthday }}</p>
-      <p><strong>Ville de naissance :</strong> {{ data.animal_id.birthLocation }}</p>
-      <p><strong>Description :</strong> {{ data.animal_id.description }}</p>
-    </div>
-    <div>
-      <h2>Information sur le demandeur</h2>
-      <img v-bind:src="`${data.user_id.picture}`"/>
-      <p><strong>Nom :</strong> {{ data.user_id.lastname }}</p>
-      <p><strong>Prénom :</strong> {{ data.user_id.firstname }}</p>
-      <p><strong>Description :</strong> {{ data.user_id.description }}</p>
-      <p><strong>Ville :</strong> {{ data.user_id.city }}</p>
-    </div>
-  </div> -->
