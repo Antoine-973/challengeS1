@@ -5,7 +5,7 @@
     import LikeService from "../../services/LikeService";
     import {inject} from 'vue' ;
 
-    const user = inject('AuthProvider:user') ;
+    const user = inject('AuthProvider:user');
     const animalsData = await AnimalService().getAnimals();
     const index = ref(0);
     const animals = reactive(animalsData);

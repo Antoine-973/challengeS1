@@ -1,9 +1,12 @@
 <script setup>
 import {inject} from "vue";
 import LoginForm from "../../components/form/LoginForm.vue";
+import {useRouter} from "vue-router";
 
 const login = inject('AuthProvider:login');
 const openSnackbar = inject('SnackbarProvider:openSnackbar');
+const router = useRouter();
+
 const onSubmitMethod = async (data) => {
 
         try {
@@ -21,6 +24,7 @@ const onSubmitMethod = async (data) => {
                 message: 'Login successful',
                 type: 'success'
             }) ;
+            await router.push('/');
         } catch (e) {
             console.log(e);
         }
