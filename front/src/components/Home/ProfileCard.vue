@@ -1,27 +1,29 @@
 <script setup>
-    import {computed, reactive, ref} from "vue";
-    import calculateAge from "../../helper/calculateAge";
-    import AnimalService from "../../services/AnimalService";
-    import LikeService from "../../services/LikeService";
-    import {inject} from 'vue' ;
+import {onBeforeMount} from "vue";
+import calculateAge from "../../helper/calculateAge";
+import LikeService from "../../services/LikeService";
+import {useAuthStore} from "../../stores/auth.store";
+import {useAnimalsStore} from "../../stores/animals.store";
+import {storeToRefs} from "pinia";
 
-    const user = inject('AuthProvider:user');
-    const animalsData = await AnimalService().getAnimals();
-    const index = ref(0);
-    const animals = reactive(animalsData);
-    const currentAnimal = computed(() => animals[index.value]);
+    const authStore = useAuthStore();
+    const { user } = storeToRefs(authStore);
+    const animalsStore = useAnimalsStore();
+    const { animals, currentAnimalIndex, currentAnimal } = storeToRefs(animalsStore);
 
-    const animalImages = [];
+    onBeforeMount(async () => {
+        await animalsStore.getAnimals();
+    })
 
     const like = () => {
         console.log("Like " + currentAnimal.value.name);
         LikeService().createLike(user.value.id, currentAnimal.value.id);
-        index.value++;
+        currentAnimalIndex.value++;
     }
 
     const dislike = () => {
         console.log("Dislike " + currentAnimal.value.name);
-        index.value++;
+        currentAnimalIndex.value++;
     }
 </script>
 
@@ -96,12 +98,12 @@
             <div class="flex flex-row gap-2 items-center">
                 <h2 class="text-2xl font-bold inline">{{ currentAnimal.name }}</h2>
                 <h2 class="text-2xl inline">{{ calculateAge(currentAnimal.birthday) }}</h2>
-                <i class="absolute right-10 fa-solid fa-lg fa-circle-info "></i>
+                <i class="absolute right-10 fa-solid fa-lg fa-circle-info"></i>
             </div>
             <p>{{ currentAnimal.description.substring(0, 100) }}...</p>
             <p>{{ currentAnimal.spa.name }}</p>
             <div class="card-actions justify-end">
-                <button class="btn btn-circle" @click="like">
+                <button class="btn btn-circle btn-primary" @click="like">
                     <i class="fa-solid fa-heart fa-2xl"></i>
                 </button>
                 <button class="btn btn-circle" @click="dislike">

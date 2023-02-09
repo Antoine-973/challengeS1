@@ -1,15 +1,18 @@
 <script setup>
 
 import {onMounted, ref} from "vue";
+import {useRouter} from "vue-router";
 
-const data =  window.location.href.split('/').pop().split('?')[1].split('&').reduce((acc, item) => {
-    const [key, value] = item.split('=');
-    acc[key] = value;
-    return acc;
-},{});
+// const data =  window.location.href.split('/').pop().split('?')[1].split('&').reduce((acc, item) => {
+//     const [key, value] = item.split('=');
+//     acc[key] = value;
+//     return acc;
+// },{});
 
 
-
+const router = useRouter();
+const data = router.currentRoute.value.query;
+console.log(data)
 const isValid = ref(false);
 const isPending = ref(true);
 const sec = ref(5);
@@ -63,7 +66,7 @@ onMounted(async () => {
             <h2>You will be redirect in {{sec}} secondes</h2>
         </div>
 
-        <h1 v-else  class="text-4xl text-center pt-8">> error during verification .... </h1>
+        <h1 v-else  class="text-4xl text-center pt-8"> Le lien de confirmation est invalide</h1>
     </div>
 
 

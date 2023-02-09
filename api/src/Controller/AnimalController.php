@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\AnimalRepository;
+use App\Repository\BreedRepository;
 use App\Repository\LikeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +16,7 @@ class AnimalController extends AbstractController
 
     public function __construct(
         private readonly AnimalRepository $animalRepository,
+        private readonly BreedRepository $breedRepository,
         private readonly LikeRepository   $likeRepository,
         private TokenStorageInterface $tokenStorage,
     ) {
@@ -23,9 +25,21 @@ class AnimalController extends AbstractController
     public function __invoke(Request $request)
     {
         try {
+            $params = $request->query->all();
+            // params contains species, age, sexe, breed
+            // find animals depending on params
+
+            if (isset($params['breeds']) && isset($params['age']) && isset($params['sex'])) {
+                $breedsId = $params['breeds'];
+                $age = $params['age'];
+                $sex = $params['sex'];
+                $animals = $this->animalRepository->findBySexAgeBreeds([$sex, $age, $breedsId]);
+            }
+            else {
+                $animals = $this->animalRepository->findAll();
+            }
             $user = $this->tokenStorage->getToken()->getUser();
             $likes = $this->likeRepository->findBy(['user' => $user]);
-            $animals = $this->animalRepository->findAll();
 
             $notLikedAnimals = [];
 

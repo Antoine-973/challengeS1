@@ -35,8 +35,9 @@ use Symfony\Component\Validator\Constraints as Assert;
             controller: RegisterCustomController::class,
             normalizationContext: ['groups' => 'user:register:read'],
             denormalizationContext: ['groups' => 'user:register:create'],
+            security: 'is_granted("IS_AUTHENTICATED_ANONYMOUSLY")',
             name: 'registerUser',
-            processor: UserPasswordHasher::class
+            processor: UserPasswordHasher::class,
         ),
         new Post(
             uriTemplate: '/api/confirm',

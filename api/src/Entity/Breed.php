@@ -17,10 +17,11 @@ class Breed
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['species:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['animal:read'])]
+    #[Groups(['species:read', 'animal:read'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]

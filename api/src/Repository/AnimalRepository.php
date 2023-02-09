@@ -39,20 +39,23 @@ class AnimalRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Animal[] Returns an array of Animal objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return Animal[] Returns an array of Animal objects
+     */
+    public function findBySexAgeBreeds($value): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.sex = :sex')
+            ->andWhere('a.age <= :age')
+            ->andWhere('a.breed.id in (:breedsId)')
+            ->join('a.breed', 'b')
+            ->setParameter('sex', $value)
+            ->setParameter('age', $value)
+            ->setParameter('breedsId', $value)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
 //    public function findOneBySomeField($value): ?Animal
 //    {

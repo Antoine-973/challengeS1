@@ -1,42 +1,36 @@
 <script setup>
-import {inject} from 'vue' ;
+import {useAuthStore} from "../../stores/auth.store";
+import {storeToRefs} from "pinia";
 
-const user = inject('AuthProvider:user') ;
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
 </script>
 
 <template>
     <main>
-        <div class="flex flex-col bg-white h-screen text-white">
-            <div class="w-full bg-gradient-to-b from-orange-500 to-orange-400 border-b grid grid-cols-5 justify-between items-center py-7 px-2">
-                <div class="avatar">
-                    <div class="w-8 rounded-full">
-                        <img src="https://placeimg.com/192/192/people" />
-                    </div>
+        <div class="flex flex-col h-screen">
+            <div class="w-full bg-primary border-b grid grid-cols-12 justify-between items-center py-7 px-2">
+                <div class="col-span-2 dropdown dropdown-bottom dropdown-right">
+                    <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                        <button class="w-10 rounded-full">
+                            <i class="fa-solid fa-user fa-xl text-white"></i>
+                        </button>
+                    </label>
+                    <ul tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
+                        <li>
+                            <a class="justify-between">
+                                Profil
+                            </a>
+                        </li>
+                        <li><router-link to="/logout">Déconnexion</router-link></li>
+                    </ul>
                 </div>
-                <div>{{user.firstname}} {{user.lastname}}</div>
-                <div class="avatar">
-                    <div class="avatar placeholder">
-                        <div class="bg-white text-neutral-content rounded-full w-8">
-                            <span class="text-sm">K</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="avatar">
-                    <div class="avatar placeholder">
-                        <div class="bg-white text-neutral-content rounded-full w-8">
-                            <span class="text-sm">K</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="avatar">
-                    <div class="avatar placeholder">
-                        <div class="bg-white text-neutral-content rounded-full w-8">
-                            <span class="text-sm">K</span>
-                        </div>
-                    </div>
-                </div>
+                <div class="text-white col-span-10 text-lg font-bold">{{user.firstname}} {{user.lastname}}</div>
             </div>
-            <div>test</div>
+            <div class="grid grid-cols-12 grid-rows-1 btn-group">
+                <button class="btn btn-ghost col-span-6 text-secondary hover:bg-transparent link-hover">Conversations</button>
+                <button class="btn btn-ghost col-span-6 text-secondary hover:bg-transparent link-hover">En attente</button>
+            </div>
         </div>
     </main>
 </template>
