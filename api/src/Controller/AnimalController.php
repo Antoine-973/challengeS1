@@ -25,17 +25,20 @@ class AnimalController extends AbstractController
     public function __invoke(Request $request)
     {
         try {
-            $params = $request->query->all();
-            // params contains species, age, sexe, breed
-            // find animals depending on params
 
-            if (isset($params['breeds']) && isset($params['age']) && isset($params['sex'])) {
-                $breedsId = $params['breeds'];
-                $age = $params['age'];
-                $sex = $params['sex'];
-                $animals = $this->animalRepository->findBySexAgeBreeds([$sex, $age, $breedsId]);
-            }
-            else {
+            $breedsId = $request->query->get('breeds');
+            $speciesId = $request->query->get('species');
+            $age = $request->query->get('age');
+            $sex = $request->query->get('sex');
+
+            // transform age to a date to compare to animal's birthdate
+            if (isset($breedsId) || isset($age) || isset($sex) || isset($species)) {
+                if (isset($age)) {
+                    $now = new \DateTime();
+                    $birthday = $now->sub(new \DateInterval('P' . $age . 'Y'));
+                }
+                $animals = $this->animalRepository->findBySexBirthdayBreeds($sex, $birthday, $speciesId, $breedsId);
+            } else {
                 $animals = $this->animalRepository->findAll();
             }
             $user = $this->tokenStorage->getToken()->getUser();

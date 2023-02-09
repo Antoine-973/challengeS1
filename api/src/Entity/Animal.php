@@ -2,18 +2,20 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use App\Controller\AnimalController;
 use App\Repository\AnimalRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Controller\AnimalController;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AnimalRepository::class)]
@@ -23,8 +25,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
     new GetCollection(
         uriTemplate: '/animals/not_liked',
         controller: AnimalController::class,
+        paginationEnabled: false,
         normalizationContext: ['groups' => ['animal:read']],
         security: 'is_granted("ROLE_USER")',
+        filters: [],
+        read: false,
         name: 'not_liked_animals',
     ),
     new Get(),

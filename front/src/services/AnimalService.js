@@ -15,20 +15,31 @@ const AnimalService = () => {
   }
 
   const getAnimalsWithParams = (species, breeds, age, sex) => {
-      return fetch(API_URL + '?' + new URLSearchParams({
-          species: species,
-          breeds: breeds,
-          age: age,
-          sex: sex,
-      }),
-          {
-              method: 'GET',
-              headers: {
-                  'Accept': 'application/json',
-                  'Authorization': 'Bearer ' + localStorage.getItem('token'),
-              }
-          }
-      )
+    let apiUrl = API_URL + '?';
+
+    if (species) {
+      apiUrl += 'species=' + species + '&';
+    }
+    if (breeds) {
+      apiUrl += 'breeds=' + breeds + '&';
+    }
+    if (age) {
+      apiUrl += 'age=' + age + '&';
+    }
+    if (sex)  {
+      apiUrl += 'sex=' + sex + '&';
+    }
+
+    return fetch(apiUrl,
+      {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        }
+      }
+    )
       .then(response => response.json())
       .then(data => data);
   }
