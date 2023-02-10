@@ -40,7 +40,7 @@ const speciesData = await BreedService().getSpecies();
                     </select>
                 </div>
                 <div class="col-span-6">
-                    <select class="select select-bordered w-full max-w-xs" v-model="selectedBreeds" @change="filterAnimals" id="breed" name="breed">
+                    <select class="select select-bordered w-full max-w-xs" v-model="selectedBreeds" @change="filterAnimals" id="breed" name="breed" multiple>
                         <option value="" selected>Race de l'animal</option>
                         <option v-for="breed in currentBreeds" :key="breed.id" :value="breed.id">{{ breed.name }}</option>
                     </select>

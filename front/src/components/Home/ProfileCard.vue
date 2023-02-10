@@ -17,12 +17,10 @@ import {storeToRefs} from "pinia";
 
     const like = () => {
         console.log("Like " + currentAnimal.value.name);
-        LikeService().createLike(user.value.id, currentAnimal.value.id);
         currentAnimalIndex.value++;
     }
 
     const dislike = () => {
-        console.log("Dislike " + currentAnimal.value.name);
         currentAnimalIndex.value++;
     }
 </script>
@@ -98,6 +96,8 @@ import {storeToRefs} from "pinia";
             <div class="flex flex-row gap-2 items-center">
                 <h2 class="text-2xl font-bold inline">{{ currentAnimal.name }}</h2>
                 <h2 class="text-2xl inline">{{ calculateAge(currentAnimal.birthday) }}</h2>
+                <i v-if="currentAnimal.sex === 1" class="fa-solid fa-mars fa-lg"></i>
+                <i v-if="currentAnimal.sex === 2" class="fa-solid fa-venus fa-lg"></i>
                 <i class="absolute right-10 fa-solid fa-lg fa-circle-info"></i>
             </div>
             <p>{{ currentAnimal.description.substring(0, 100) }}...</p>

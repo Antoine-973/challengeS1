@@ -42,7 +42,7 @@ class AnimalRepository extends ServiceEntityRepository
     /**
      * @return Animal[] Returns an array of Animal objects
      */
-    public function findBySexBirthdayBreeds($sex, $birthday, $speciesId, $breedsId): array
+    public function findBySexBirthdayBreeds($sex, $birthday, $species, $breeds): array
     {
         $qb = $this->createQueryBuilder('a');
 
@@ -56,16 +56,17 @@ class AnimalRepository extends ServiceEntityRepository
                 ->setParameter('birthday', $birthday);
         }
 
-        if (isset($speciesId)) {
-            $qb->andWhere('a.species.id == :speciesId)')
-                ->join('a.species', 's')
-                ->setParameter('speciesId', $speciesId);
-        }
+        if (isset($species)) {
+            $qb->join('a.species', 's')
+                ->andWhere('s.id = :species')
+                ->setParameter('species', $species);
 
-        if (isset($breedsId)) {
-            $qb->andWhere('a.breeds.id in (:breedsId)')
-                ->join('a.breeds', 'b')
-                ->setParameter('breedsId', $breedsId);
+            if (isset($breeds)) {
+                $qb->innerJoin('a.breeds', 'b')
+                    ->andWhere('b.id IN (:breeds)')
+                    ->setParameter('breeds', $breeds);
+                var_dump($qb->getQuery()->getSQL());
+            }
         }
 
         return $qb->getQuery()->getResult();

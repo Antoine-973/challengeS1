@@ -25,17 +25,21 @@ class AnimalController extends AbstractController
     public function __invoke(Request $request)
     {
         try {
-
             $breedsId = $request->query->get('breeds');
             $speciesId = $request->query->get('species');
             $age = $request->query->get('age');
             $sex = $request->query->get('sex');
 
             // transform age to a date to compare to animal's birthdate
-            if (isset($breedsId) || isset($age) || isset($sex) || isset($species)) {
+            if (isset($breedsId) || isset($age) || isset($sex) || isset($speciesId)) {
                 if (isset($age)) {
                     $now = new \DateTime();
                     $birthday = $now->sub(new \DateInterval('P' . $age . 'Y'));
+                } else {
+                    $birthday = null;
+                }
+                if (isset($breedsId)) {
+                    $breedsId = explode(',', $breedsId);
                 }
                 $animals = $this->animalRepository->findBySexBirthdayBreeds($sex, $birthday, $speciesId, $breedsId);
             } else {

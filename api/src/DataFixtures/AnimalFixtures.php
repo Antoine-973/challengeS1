@@ -67,7 +67,7 @@ class AnimalFixtures extends Fixture implements DependentFixtureInterface
             ->setDescription("Sera le plus beau des chates")
             ->setIsSterilize(false)
             ->setBirthLocation('La street')
-            ->setSex(1)
+            ->setSex(2)
             ->setSpecies($cat)
             ->setSpa($faker->randomElement($spas))
             ->addBreed($crossbreed);
@@ -81,7 +81,7 @@ class AnimalFixtures extends Fixture implements DependentFixtureInterface
 
         $species = $manager->getRepository(Species::class)->findAll();
 
-        for($i = 0; $i < 23; $i++) {
+        for($i = 0; $i <= 100; $i++) {
             $animalSpecies = $faker->randomElement($species);
             $breeds = $animalSpecies->getBreeds();
             if (count($breeds) >= 2){
