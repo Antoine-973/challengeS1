@@ -1,4 +1,5 @@
-const API_URL = 'https://localhost/likes';
+import {basePath} from "./basePath";
+const API_URL = basePath + '/likes';
 
 const LikeService = () => {
 

@@ -18,7 +18,7 @@ const isPending = ref(true);
 const sec = ref(5);
 
 const verifyUser = async () => {
-    const response = await fetch('https://localhost/api/confirm', {
+    const response = await fetch('https://localhost/confirm', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

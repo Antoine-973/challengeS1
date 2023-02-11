@@ -1,7 +1,7 @@
 import {basePath} from "./basePath";
-const path = basePath + 'reviews' ;
-const pathReviews = basePath + 'reviews/';
-const pathUser = basePath + 'users/';
+const path = basePath + '/reviews' ;
+const pathReviews = basePath + '/reviews/';
+const pathUser = basePath + '/users/';
 const pathBan = basePath + 'api/banUser/'
 
 

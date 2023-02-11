@@ -1,6 +1,6 @@
 import {basePath} from "./basePath";
-const pathUser = basePath + 'users/' ;
-const ratePath = basePath + 'reviews';
+const pathUser = basePath + '/users/' ;
+const ratePath = basePath + '/reviews';
 
 
 export const getUserInfo = async (id) => {

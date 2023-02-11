@@ -1,6 +1,7 @@
 import jwtDecode from "jwt-decode";
+import {basePath} from "./basePath";
 
-const API_URL = 'https://localhost/users';
+const API_URL = basePath + '/users';
 
 const getUser = async () => {
   const token = localStorage.getItem('token');

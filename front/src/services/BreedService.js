@@ -1,4 +1,6 @@
-const API_URL = 'https://localhost/species';
+import {basePath} from "./basePath";
+
+const API_URL = basePath + '/species';
 
 const SpeciesService = () => {
   const getSpecies = () => {

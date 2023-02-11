@@ -1,5 +1,5 @@
 import {basePath} from "./basePath";
-const path = basePath + 'likes/getAcceptedLikes' ;
+const path = basePath + '/likes/getAcceptedLikes' ;
 
 
 export const getAcceptedLikesUsers = async () => {

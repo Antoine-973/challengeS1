@@ -1,4 +1,6 @@
-const API_URL = 'https://localhost/animals/not_liked';
+import {basePath} from "./basePath";
+
+const API_URL = basePath + '/animals/not_liked';
 
 const AnimalService = () => {
   const getAnimals = () => {
