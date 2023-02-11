@@ -6,28 +6,38 @@ const pathBan = basePath + 'api/banUser/'
 
 
 export const getAllReviews = async () => {
-    return await fetch(path, {
-
-    });
+    return fetch(path, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+      }
+    })
+      .then(response => response.json())
+      .then(data => data);
 };
 
 export const getReviewById = async (id) => {
-    return await fetch(pathReviews + id, {
-
-    });
+    return fetch(pathReviews + id, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+      }
+    })
+      .then(response => response.json())
+      .then(data => data);
 };
 
 
 export const RefuseReview = async (id) => {
 
     return await fetch(pathReviews + id, {
-      method: 'PATCH',
+      method: 'DELETE',
       headers: {
         'Content-Type': 'application/merge-patch+json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
       },
-      body: JSON.stringify({
-        isValidate: false
-      })
     });
 }
 
@@ -36,6 +46,7 @@ export const ValidateReview = async (id) => {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/merge-patch+json',
+            'Authorization': 'Bearer ' + localStorage.getItem('token'),
         },
         body: JSON.stringify({
             isValidate: true
@@ -48,6 +59,7 @@ export const BanUser = async (id) => {
         method: 'PATCH',
         headers:{
             'Content-Type': 'application/merge-patch+json',
+            'Authorization': 'Bearer ' + localStorage.getItem('token'),
         },
         body: JSON.stringify({
             isBan: true

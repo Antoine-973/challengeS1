@@ -13,6 +13,7 @@ use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use App\Repository\UserRepository;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[AsController]
 class RegisterCustomController extends AbstractController {
@@ -47,7 +48,7 @@ class RegisterCustomController extends AbstractController {
             $user->getEmail(),
             'Confirmation de compte',
             '<p>Tu viens de créer un compte sur SPAdoption click sur ce lien pour vérifier tom compte : </p>
-                <a href="http://localhost:3000/confirmAccount?token='.$token.'">
+                <a href="http://localhost:3000/confirm-account?token='.$token.'">
                 confirmer le compte</a>'
         );
         return $user ;

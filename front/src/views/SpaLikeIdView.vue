@@ -1,95 +1,92 @@
 <script setup>
-import { ref } from 'vue'
-import {getLikesId, patchAcceptLikes, patchRejectLikes} from '../services/likesServices';
+import {onBeforeMount, ref} from 'vue'
+import LikeService from "../services/LikeService";
 import Menu from "../components/TemplateBO.vue";
-const data = ref(null)
+import {useRouter} from "vue-router";
 
-let idUrl = (new URL(window.location)).pathname.split('/')[2];
+const like = ref(null)
+const router = useRouter();
+const idUrl = router.currentRoute.value.params.id;
 
-const getLikeId = async(id) => {
-  const responseGetLikeId = await getLikesId(id);
-  const likeGetId = await responseGetLikeId.json();
-  data.value = likeGetId;
-}
+onBeforeMount(async () => {
+  like.value = await LikeService().getLike(idUrl);
+})
 
 const acceptLike = async(id) => {
-  const responsePatchLike = await patchAcceptLikes(id);
+  const responsePatchLike = await LikeService().patchAcceptLikes(id);
   const likePatch = await responsePatchLike.json();
   redirectToAllAnimalsLike();
 }
 
 const rejectLike = async(id) => {
-  const responseRefuseLike = await patchRejectLikes(id);
+  const responseRefuseLike = await LikeService().patchRejectLikes(id);
   const likeRefusePatch = await responseRefuseLike.json();
   redirectToAllAnimalsLike();
 }
 
 const redirectToAllAnimalsLike = () => {
-  window.location.href = "/AllAnimalsLike";
+    router.push('/back-office/likes');
 }
-
-getLikeId(idUrl);
-
 </script>
 
 <template>
   <main>
     <div class="flex justify-between mt-5">
-      <Menu></Menu>
+      <Menu/>
       <div class="grow ml-32">
-        <router-link to="/AllAnimalsLike"><i class="fas fa-arrow-left"></i> Retour à la liste des demandes</router-link>
-        <h1 class="text-center mb-11 text-lg">Récapitulatif de la demande d'adoption N°{{ data.id }}</h1>
+        <router-link to="/back-office/likes"><i class="fas fa-arrow-left"></i> Retour à la liste des demandes</router-link>
+        <h1 class="text-center mb-11 text-lg">Récapitulatif de la demande d'adoption N°{{ like.id }}</h1>
         <div class="overflow-x-auto">
           <div class="container-info">
             <div class="card card-side bg-base-100 shadow-xl">
-              <!-- <figure><img v-bind:src="`${data.animalId.animalPictures}`" alt="animal"/></figure> -->
+              <!-- <figure><img v-bind:src="`${like.animal.animalPictures}`" alt="animal"/></figure> -->
               <figure><img src="https://www.veterinaire-lecres.com/Uploads/conseils/Canitie.jpg" alt="animal"/></figure>
               <div class="card-body">
-                <h2 class="card-title">{{ data.animalId.name }}</h2>
-                <p>{{ new Date(data.animalId.birthday).getDate() + '/' + (new Date(data.animalId.birthday).getMonth() + 1) + '/' + new Date(data.animalId.birthday).getFullYear() }}</p>
-                <p>{{ new Date().getFullYear() - new Date(data.animalId.birthday).getFullYear() + ' ans'}}</p>
-                <p><strong>Ville de naissance :</strong> {{ data.animalId.birthLocation }}</p>
-                <p>{{ data.animalId.description }}</p>
+                <h2 class="card-title">{{ like.animal.name }}</h2>
+                <p>{{ new Date(like.animal.birthday).getDate() + '/' + (new Date(like.animal.birthday).getMonth() + 1) + '/' + new Date(like.animal.birthday).getFullYear() }}</p>
+                <p>{{ new Date().getFullYear() - new Date(like.animal.birthday).getFullYear() + ' ans'}}</p>
+                <p><strong>Ville de naissance :</strong> {{ like.animal.birthLocation }}</p>
+                <p>{{ like.animal.description }}</p>
               </div>
             </div>
 
             <div class="card lg:card-side bg-base-100 shadow-xl">
               <figure><img src="https://st2.depositphotos.com/1662991/8837/i/450/depositphotos_88370500-stock-photo-mechanic-wearing-overalls.jpg" alt="adopteur"/></figure>
               <div class="card-body">
-                <h2 class="card-title">{{ data.userId.lastname }} {{ data.userId.firstname }}</h2>
-                <p> {{ data.userId.city }}</p>
-                <p>{{ data.userId.description }}</p>
+                <h2 class="card-title">{{ like.user.lastname }} {{ like.user.firstname }}</h2>
+                <p> {{ like.user.city }}</p>
+                <p>{{ like.user.description }}</p>
               </div>
             </div>
           </div>
 
           <div class="container-button">
-            <label :for="'accept' + data.id" class="btn btn-accent">Accepter la demande</label>
-            <label :for="'reject' + data.id" class="btn btn-primary">Refuser la demande</label>
+            <label :for="'accept' + like.id" class="btn btn-primary">Accepter la demande</label>
+            <label :for="'reject' + like.id" class="btn btn-accent">Refuser la demande</label>
           </div>
 
           <!-- Modal accept request -->
-          <input type="checkbox" :id="'accept' + data.id" class="modal-toggle" />
+          <input type="checkbox" :id="'accept' + like.id" class="modal-toggle" />
           <div class="modal">
             <div class="modal-box">
               <h3 class="font-bold text-lg">Êtes-vous sûr de vouloir accepter cette demande d'adoption ?</h3>
                 <p class="text-warning"><strong>Cette action est irreversible.</strong></p>
               <div class="modal-action">
-                <button @click="acceptLike(data.id)" class="btn">Accepter</button>
-                <label :for="'accept' + data.id" class="btn">Annuler</label>
+                <button @click="acceptLike(like.id)" class="btn">Accepter</button>
+                <label :for="'accept' + like.id" class="btn">Annuler</label>
               </div>
             </div>
           </div>
 
         <!-- Modal reject request -->
-          <input type="checkbox" :id="'reject' + data.id" class="modal-toggle" />
+          <input type="checkbox" :id="'reject' + like.id" class="modal-toggle" />
           <div class="modal">
             <div class="modal-box">
               <h3 class="font-bold text-lg">Êtes-vous sûr de vouloir refuser cette demande d'adoption ?</h3>
                 <p class="text-warning"><strong>Cette action est irreversible.</strong></p>
               <div class="modal-action">
-                <button @click="rejectLike(data.id)" class="btn">Refuser</button>
-                <label :for="'reject' + data.id" class="btn">Annuler</label>
+                <button @click="rejectLike(like.id)" class="btn btn-primary">Refuser</button>
+                <label :for="'reject' + like.id" class="btn">Annuler</label>
               </div>
             </div>
           </div>

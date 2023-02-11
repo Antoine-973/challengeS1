@@ -31,10 +31,6 @@ class Review
 
     #[ORM\ManyToOne(inversedBy: 'reviews')]
     #[Groups(['review:read'])]
-    private ?Spa $spa = null;
-
-    #[ORM\ManyToOne(inversedBy: 'reviews')]
-    #[Groups(['review:read'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'reviews')]
@@ -43,7 +39,7 @@ class Review
 
     #[ORM\Column(nullable: true)]
     #[Groups(['review:read'])]
-    private ?bool $isValidate = null;
+    private ?bool $isValidate = false;
 
     public function getId(): ?int
     {
@@ -70,18 +66,6 @@ class Review
     public function setDescription(string $description): self
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getSpa(): ?Spa
-    {
-        return $this->spa;
-    }
-
-    public function setSpaId(?Spa $spa): self
-    {
-        $this->spa = $spa;
 
         return $this;
     }

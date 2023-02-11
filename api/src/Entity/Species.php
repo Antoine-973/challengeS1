@@ -8,25 +8,34 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: SpeciesRepository::class)]
-#[ApiResource]
+#[ApiResource
+(
+    normalizationContext: ['groups' => ['species:read']],
+    denormalizationContext: ['groups' => ['species:create', 'species:update']],
+)]
 class Species
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['species:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['species:read','animal:read'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['species:read','animal:read'])]
     private ?string $description = null;
 
     #[ORM\OneToMany(mappedBy: 'species', targetEntity: Animal::class, orphanRemoval: true)]
     private Collection $animals;
 
+    #[Groups(['species:read'])]
     #[ORM\OneToMany(mappedBy: 'species', targetEntity: Breed::class, orphanRemoval: true)]
     private Collection $breeds;
 

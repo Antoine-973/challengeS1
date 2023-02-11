@@ -41,9 +41,9 @@ class AcceptLikeUserCustomController extends AbstractController
     $like->setIsValidate(true);
     $this->emailServices->sendMail(
       'sales.playz@gmail.com',
-      $like->getUserId()->getEmail(),
+      $like->getUser()->getEmail(),
       'Demande d\'adoption acceptée',
-      '<p>Bonjour '.$like->getUserId()->getFirstName().' '.$like->getUserId()->getLastName().',<br/><br/>
+      '<p>Bonjour '.$like->getUser()->getFirstName().' '.$like->getUser()->getLastName().',<br/><br/>
       C\'est avec joie que nous vous annonçons que votre demande d\'adoption a été accepté. Prenez rendez-vous pour rencontrer votre futur animal :)</p><br/><br/>
       <p>L\'équipe SPAdoption</p>'
     );

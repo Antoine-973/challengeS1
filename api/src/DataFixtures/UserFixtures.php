@@ -54,7 +54,7 @@ class UserFixtures extends Fixture  implements DependentFixtureInterface
 
         $spaMember = (new User())
             ->setEmail('user@spa.com')
-            ->setRoles(['ROLE_USER'])
+            ->setRoles(['ROLE_SPA'])
             ->setIsVerified(true)
             ->setLastname('Doe')
             ->setFirstname('John')

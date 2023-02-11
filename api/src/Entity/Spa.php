@@ -21,21 +21,27 @@ class Spa
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['animal:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['animal:read'])]
     private ?string $address = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['animal:read'])]
     private ?string $city = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['animal:read'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['animal:read'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['animal:read'])]
     private ?string $phoneNumber = null;
 
     #[ORM\OneToMany(mappedBy: 'spa', targetEntity: User::class)]

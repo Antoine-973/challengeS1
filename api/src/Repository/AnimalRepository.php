@@ -39,20 +39,38 @@ class AnimalRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Animal[] Returns an array of Animal objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return Animal[] Returns an array of Animal objects
+     */
+    public function findBySexBirthdayBreeds($sex, $birthday, $species, $breeds): array
+    {
+        $qb = $this->createQueryBuilder('a');
+
+        if (isset($sex)) {
+            $qb->andWhere('a.sex = :sex')
+                ->setParameter('sex', $sex);
+        }
+
+        if (isset($birthday)) {
+            $qb->andWhere('a.birthday >= :birthday')
+                ->setParameter('birthday', $birthday);
+        }
+
+        if (isset($species)) {
+            $qb->join('a.species', 's')
+                ->andWhere('s.id = :species')
+                ->setParameter('species', $species);
+
+            if (isset($breeds)) {
+                $qb->innerJoin('a.breeds', 'b')
+                    ->andWhere('b.id IN (:breeds)')
+                    ->setParameter('breeds', $breeds);
+                var_dump($qb->getQuery()->getSQL());
+            }
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 
 //    public function findOneBySomeField($value): ?Animal
 //    {

@@ -2,7 +2,7 @@
   "name": "front",
   "version": "0.0.0",
   "private": true,
-  "proxy": "http://localhost",
+  "proxy": "https://localhost",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

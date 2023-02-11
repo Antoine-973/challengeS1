@@ -2,53 +2,49 @@
 import Menu from "../../components/TemplateBO.vue";
 import { getReviewById, RefuseReview, ValidateReview, getAllReviews, BanUser, GetUser} from '../../services/adminService';
 import { Field } from 'vee-validate';
-import { ref } from 'vue'
+import {onBeforeMount, onMounted, ref} from 'vue'
+import {useRouter} from "vue-router";
 
-let idReview = (new URL(window.location)).pathname.split('/')[4];
+const router = useRouter();
+let idReview = router.currentRoute.value.params.id;
 const review = ref(null);
 const rate = ref(null);
 const description = ref(null);
-const userRatedInfo = ref(null);
-const userWhoRate = ref(null);
 let responseStatusRefuse = ref(false);
 let responseStatusValidate = ref(false);
 
 let isAlreadyValidate = ref(false);
 
-const getReview = async(id) => {
-    const response = await getReviewById(id);
-    const data = await response.json();
-    review.value = data;
+onBeforeMount(async () => {
+    review.value = await getReviewById(idReview);
     rate.value = review.value.rate;
     description.value = review.value.description;
-    userRatedInfo.value = review.value.user;
-    userWhoRate.value = review.value.spaUser;
 
     if(review.value.isValidate){
         isAlreadyValidate.value = true;
     }
-
-}
+})
 
 const RefuseComment = async(id) => {
-    const response = await RefuseReview(id);
-    
+    const response = RefuseReview(id);
+
     if(response.status === 200){
         responseStatusRefuse.value = true;
         setTimeout(() => {
-            window.location.href = '/backOffice/admin'
+            console.log('redirection')
+            router.push('/back-office/admin/reviews')
         }, 2000)
     }
 }
 
 const ValidateComment = async(id) => {
     const response = await ValidateReview(id);
-    
+
     if(response.status === 200){
         responseStatusValidate.value = true;
         AutoBan();
         setTimeout(() => {
-            window.location.href = '/backOffice/admin'
+            router.push('/back-office/admin/reviews')
         }, 2000)
     }
 }
@@ -82,7 +78,7 @@ const AutoBan = async() => {
             usersToBan.push(i);
         }
     }
-    
+
 
     if(usersToBan.length > 0){
         usersToBan.forEach(function(el){
@@ -102,15 +98,12 @@ const CallBanUser = async (id) =>{
     }
 
 }
-
-getReview(idReview);
-
 </script>
 
 <template>
   <main>
     <div class="flex justify-between">
-        <Menu></Menu>
+        <Menu/>
 
         <div class="grow ml-32">
 
@@ -152,21 +145,21 @@ getReview(idReview);
                 </div>
             </div>
 
-            <h1 class="text-xl text-center mt-11" v-if="userRatedInfo">Commentaire pour : {{ userRatedInfo.firstname }} {{ userRatedInfo.lastname }}</h1>
-            <p class="mt-11" v-if="userWhoRate">Par : {{ userWhoRate.firstname }} {{ userWhoRate.lastname }}</p>
+            <h1 class="text-xl text-center mt-11">Commentaire pour : {{ review.user.firstname }} {{ review.user.lastname }}</h1>
+            <p class="mt-11">Par : {{ review.spaUser.firstname }} {{ review.spaUser.lastname }}</p>
             <div class="flex flex-col">
 
                 <div class="rating mt-20">
-                    <input type="radio" name="rating-2" :checked="rate == 1" class="mask mask-star-2 bg-warning" value="1" disabled> 
-                    <input type="radio" name="rating-2" :checked="rate == 2" class="mask mask-star-2 bg-warning" value="2" disabled> 
-                    <input type="radio" name="rating-2" :checked="rate == 3" class="mask mask-star-2 bg-warning" value="3" disabled> 
-                    <input type="radio" name="rating-2" :checked="rate == 4" class="mask mask-star-2 bg-warning" value="4" disabled> 
+                    <input type="radio" name="rating-2" :checked="rate == 1" class="mask mask-star-2 bg-warning" value="1" disabled>
+                    <input type="radio" name="rating-2" :checked="rate == 2" class="mask mask-star-2 bg-warning" value="2" disabled>
+                    <input type="radio" name="rating-2" :checked="rate == 3" class="mask mask-star-2 bg-warning" value="3" disabled>
+                    <input type="radio" name="rating-2" :checked="rate == 4" class="mask mask-star-2 bg-warning" value="4" disabled>
                     <input type="radio" name="rating-2" :checked="rate == 5" class="mask mask-star-2 bg-warning" value="5" disabled>
                 </div>
 
-                
-                <Field as="textarea" name="description" class="w-3/4 mt-11 h-40" v-model = "description" disabled/>
-                
+
+                <Field as="textarea" name="description" class="w-3/4 mt-11 h-40" v-model ="description" disabled/>
+
                 <div class="flex justify-evenly mt-20">
                     <label for="my-modal" class="btn btn-error">Refuser</label>
                     <label for="my-modal2" class="btn btn-success">Valider</label>

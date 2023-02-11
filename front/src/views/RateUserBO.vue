@@ -1,54 +1,36 @@
 <script setup>
-    import Menu from "../components/TemplateBO.vue";
-    import { Field, Form, defineRule } from 'vee-validate';
-    import { ref, reactive } from 'vue'
-    import {getUserInfo, rateUser} from '../services/rateUserService';
-    import jwt_decode from 'jwt-decode';
+import Menu from "../components/TemplateBO.vue";
+import {defineRule, Field, Form} from 'vee-validate';
+import {onBeforeMount, reactive, ref} from 'vue'
+import {getUserInfo, rateUser} from '../services/rateUserService';
+import {useRouter} from "vue-router";
+import {useAuthStore} from "../stores/auth.store";
+import {storeToRefs} from "pinia";
 
     const dataUser = ref(null)
-    
-
-    let idUser = (new URL(window.location)).pathname.split('/')[3];
-    let connectedUser;
-    let connectedUserSpaId;
-    let apiResponseStatus = ref(false);
+    const router = useRouter();
+    const idUser = router.currentRoute.value.params.id;
+    const authStore = useAuthStore();
+    const {user} = storeToRefs(authStore);
+    const apiResponseStatus = ref(false);
 
     const formData = reactive({
         message: '',
         stars: '1',
     });
 
-    const getConnectedUser = async() => {
-        const token = localStorage.getItem("token");
-        connectedUser = jwt_decode(token)
-    }
-    
-
     const getUser = async() => {
         const responseGetUser = await getUserInfo(idUser);
-        const user = await responseGetUser.json();
-        dataUser.value = user;
+        dataUser.value = await responseGetUser.json();
     }
-
-    
-    const getInfoConnectedUser = async(id) => {
-        const info = await getUserInfo(id);
-        const response = await info.json();
-        connectedUserSpaId = response.spa.id;
-    }
-
-    getUser();
-    getConnectedUser();
-    getInfoConnectedUser(connectedUser.id);
-
 
     const onSubmit = async() => {
         let rate = parseInt(formData.stars);
-        const responseSubmit = await rateUser(idUser, rate, formData.message, connectedUser.id, connectedUserSpaId);
-        if(responseSubmit.status === 201){
+        const response = await rateUser(idUser, rate, formData.message, user.value.id, user.value.spa.id);
+        if(response.status === 201){
             apiResponseStatus.value = true;
             setTimeout(() => {
-                window.location.href = '/backOffice/review'
+                router.push('/back-office/reviews')
             }, 2000)
         }
     }
@@ -58,15 +40,17 @@
             return 'This field is required';
         }
         return true;
-    }); 
+    });
 
-    
+    onBeforeMount(() => {
+        getUser();
+    })
 </script>
 
 <template>
   <main>
      <div class="flex justify-between">
-        <Menu></Menu>
+        <Menu/>
 
         <div class="grow ml-32">
 
@@ -76,23 +60,23 @@
                     <span>La note à bien été enregistrée !</span>
                 </div>
             </div>
-            
+
             <h1 class="text-xl text-center mt-11" v-if="dataUser != null">Noter l'utilisateur : {{ dataUser.firstname }} {{ dataUser.lastname }}</h1>
-            
+
             <div class="flex flex-col">
 
                 <Form @submit="onSubmit" class="flex flex-col w-full">
                     <div class="rating mt-28">
-                        <input type="radio" name="rating-2" checked="checked" class="mask mask-star-2 bg-warning" value="1" v-model="formData.stars"> 
-                        <input type="radio" name="rating-2" class="mask mask-star-2 bg-warning" value="2" v-model="formData.stars"> 
-                        <input type="radio" name="rating-2" class="mask mask-star-2 bg-warning" v-model="formData.stars" value="3"> 
-                        <input type="radio" name="rating-2" class="mask mask-star-2 bg-warning" v-model="formData.stars" value="4"> 
+                        <input type="radio" name="rating-2" checked="checked" class="mask mask-star-2 bg-warning" value="1" v-model="formData.stars">
+                        <input type="radio" name="rating-2" class="mask mask-star-2 bg-warning" value="2" v-model="formData.stars">
+                        <input type="radio" name="rating-2" class="mask mask-star-2 bg-warning" v-model="formData.stars" value="3">
+                        <input type="radio" name="rating-2" class="mask mask-star-2 bg-warning" v-model="formData.stars" value="4">
                         <input type="radio" name="rating-2" class="mask mask-star-2 bg-warning" v-model="formData.stars" value="5">
                     </div>
 
-                    
+
                     <Field as="textarea" name="description" class="w-3/4 mt-11 h-40" rules="required" v-model="formData.message"/>
-                       
+
 
                     <input type="checkbox" id="my-modal" class="modal-toggle" />
                     <div class="modal">
@@ -101,7 +85,7 @@
                             <p class="py-4">Cette action est irréversible.</p>
                             <div class="modal-action">
                                 <label for="my-modal" class="btn">Annuler</label>
-                                <button class="btn btn-success" type="submit">Envoyer</button> 
+                                <button class="btn btn-success" type="submit">Envoyer</button>
                             </div>
                         </div>
                     </div>

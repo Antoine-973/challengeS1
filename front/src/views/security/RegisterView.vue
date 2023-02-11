@@ -22,9 +22,14 @@ const register = async (data) => {
 </script>
 
 <template>
-    <div class="flex justify-center justify-items-center flex-col  h-full w-full">
-        <h1 class="text-4xl text-center">Register</h1>
-        <UserForm :submit="register" />
+    <div class="grid grid-cols-12 grid-rows-1 h-screen w-full">
+        <div class="col-span-6">
+            <img src="src/assets/images/connexion.png" alt="login" class="h-screen w-full object-cover">
+        </div>
+        <div class="flex flex-col col-span-6 justify-center justify-items-center">
+            <h1 class="text-4xl text-center">Inscription</h1>
+            <UserForm :submit="register" />
+        </div>
     </div>
 </template>
 

@@ -54,18 +54,18 @@ import {inject, reactive, ref} from "vue";
                     <input type="email" id="email" name="email" v-model="user.email" autocomplete="current-email" class="input input-bordered w-full">
                 </div>
                 <div class="col-span-6 form-control w-full">
-                    <label for="password" class="label">Password</label>
+                    <label for="password" class="label">Mot de passe</label>
                     <input type="password" id="password" name="password" v-model="user.password" autocomplete="current-password" class="input input-bordered w-full">
                 </div>
                 <div class=" col-span-12 w-full">
-                    <button type="submit" class="btn w-full " :disabled="isSubmitting">Login</button>
+                    <button type="submit" class="btn btn-primary w-full" :disabled="isSubmitting">Connexion</button>
                 </div>
 
             </div>
         </form>
         <div class="col-span-12 pr-8 text-right">
-            <router-link to="/register"  >Tu n'as pas de comtpe ? Créer en un!</router-link>
-            <router-link class="px-8" to="/reset-password"  >Mot de passe oublié</router-link>
+            <router-link to="/register" class="btn-link">Tu n'as pas de compte ? Créer en un!</router-link>
+            <router-link class="px-8 btn-link" to="/reset-password"  >Mot de passe oublié</router-link>
         </div>
     </div>
 </template>

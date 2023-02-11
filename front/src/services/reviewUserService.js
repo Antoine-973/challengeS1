@@ -3,7 +3,13 @@ const path = basePath + 'likes/getAcceptedLikes' ;
 
 
 export const getAcceptedLikesUsers = async () => {
-    return await fetch(path, {
-      // headers: {authorization: 'Bearer ' + localStorage.getItem('token')}
-    });
+    return fetch(path, {
+        method: 'GET',
+       headers: {
+          authorization: 'Bearer ' + localStorage.getItem('token'),
+          'Accept': 'application/json',
+        }
+    })
+      .then(response => response.json())
+      .then(data => data);
 };

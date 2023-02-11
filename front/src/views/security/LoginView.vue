@@ -1,9 +1,11 @@
 <script setup>
 import {inject} from "vue";
 import LoginForm from "../../components/form/LoginForm.vue";
+import {useAuthStore} from "../../stores/auth.store";
 
-const login = inject('AuthProvider:login');
+const authStore = useAuthStore();
 const openSnackbar = inject('SnackbarProvider:openSnackbar');
+
 const onSubmitMethod = async (data) => {
 
         try {
@@ -16,9 +18,9 @@ const onSubmitMethod = async (data) => {
                 body: JSON.stringify(data)
             });
             const json = await response.json();
-            await login(json);
+            await authStore.login(json);
             openSnackbar({
-                message: 'Login successful',
+                message: 'Connexion réussie',
                 type: 'success'
             }) ;
         } catch (e) {
@@ -29,9 +31,14 @@ const onSubmitMethod = async (data) => {
 </script>
 
 <template>
-    <div class="flex justify-center justify-items-center flex-col  h-full w-full">
-        <h1 class="text-4xl text-center">Login</h1>
-        <LoginForm :submit="onSubmitMethod" />
+    <div class="grid grid-cols-12 grid-rows-1 h-screen w-full">
+        <div class="col-span-6">
+            <img src="src/assets/images/connexion.png" alt="login" class="h-screen w-full object-cover">
+        </div>
+        <div class="flex flex-col col-span-6 justify-center justify-items-center">
+            <h1 class="text-4xl text-center">Connexion</h1>
+            <LoginForm :submit="onSubmitMethod" />
+        </div>
     </div>
 </template>
 

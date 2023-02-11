@@ -1,20 +1,15 @@
 <script setup>
 import Menu from "../../components/TemplateBO.vue";
 import { getAllReviews } from '../../services/adminService';
-import { ref } from 'vue'
+import {onBeforeMount, ref} from 'vue'
 
 const reviews = ref(null);
 const filteredReviews = ref(null);
 
-const getReviews = async() => {
-    const responseGetReviews = await getAllReviews();
-    const data = await responseGetReviews.json();
-    reviews.value = data['hydra:member'];
-
-    filteredReviews.value = reviews.value.filter(el => el.rate <= 3 && el.isValidate == null);
-}
-
-getReviews();
+onBeforeMount(async () => {
+    const reviewsData = await getAllReviews();
+    reviews.value = reviewsData.filter(el => el.rate <= 3 && !el.isValidate);
+})
 
 </script>
 
@@ -37,11 +32,11 @@ getReviews();
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="review in filteredReviews">
+                        <tr v-for="review in reviews">
                             <td>{{ review.user.firstname }}  {{ review.user.lastname }}</td>
                             <td>{{ review.rate }}</td>
                             <td>{{ review.description }}</td>
-                            <td><a :href="'/backOffice/admin/reviews/' + review.id"><i class="fa-solid fa-eye"></i></a></td>
+                            <td><a :href="'/back-office/admin/reviews/' + review.id"><i class="fa-solid fa-eye"></i></a></td>
                         </tr>
                     </tbody>
                 </table>
@@ -49,7 +44,7 @@ getReviews();
         </div>
 
     </div>
-    
-    
+
+
   </main>
 </template>

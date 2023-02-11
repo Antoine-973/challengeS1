@@ -41,9 +41,9 @@ class RejectLikeUserCustomController extends AbstractController
     $like->setIsValidate(false);
     $this->emailServices->sendMail(
       'sales.playz@gmail.com',
-      $like->getUserId()->getEmail(),
+      $like->getUser()->getEmail(),
       'Demande d\'adoption refusée',
-      '<p>Bonjour '.$like->getUserId()->getFirstName().' '.$like->getUserId()->getLastName().',<br/><br/>
+      '<p>Bonjour '.$like->getUser()->getFirstName().' '.$like->getUser()->getLastName().',<br/><br/>
       C\'est avec tristesse que nous vous annonçons que votre demande d\'adoption a été refusée :(</p><br/><br/>
       <p>L\'équipe SPAdoption</p>'
     );
