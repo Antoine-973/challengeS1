@@ -70,7 +70,7 @@ export default {
 
 <template>
   <main>
-    <h1 class="text-center mb-11 text-lg" style="margin-top: 2%;">Les animaux sont nos amis ! Nous sommes les seuls à pouvoir les aider. Pour y contribuer, verser la somme de votre choix, ça fera des heureux :)</h1>
+    <h1 class="text-center mb-11 text-lg" style="margin-top: 2%;">Les animaux sont nos amis ! Nous sommes les seuls à pouvoir les aider. Pour y contribuer, versez la somme de votre choix, ça fera des heureux :)</h1>
     <stripe-checkout
       ref="paidsixty"
       mode="payment"
