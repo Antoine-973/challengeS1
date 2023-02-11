@@ -11,6 +11,21 @@ const router = createRouter({
       component: () => import('../views/HomeView.vue')
     },
     {
+      path: '/donation',
+      name: 'donation',
+      component: () => import('../views/DonationView.vue')
+    },
+    {
+      path: '/success',
+      name: 'success',
+      component: () => import('../views/SuccessView.vue')
+    },
+    {
+      path: '/error',
+      name: 'error',
+      component: () => import('../views/ErrorView.vue')
+    },
+    {
       path: '/AllAnimalsLike',
       name: 'animalsLike',
       component: () => import('../views/SpaBoView.vue'),

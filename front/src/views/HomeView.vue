@@ -16,6 +16,7 @@ import ProfileCard from "../components/Home/ProfileCard.vue";</script>
                     <div>Like</div>
                     <div>Ouvrir le profil</div>
                     <div>Photo Suivante</div>
+                    <a href="donation"><button class="btn btn-primary">Faire un don</button></a>
                 </div>
             </div>
         </div>
