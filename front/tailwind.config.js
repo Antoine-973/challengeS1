@@ -955,5 +955,31 @@ module.exports = {
       50: '50',
     },
   },
+  daisyui: {
+    themes: [
+      {
+        spaTheme: {
+
+          "primary": "#EB651C",
+
+          "secondary": "#1CA2EB",
+
+          "accent": "#FDF3ED",
+
+          "neutral": "#FFF",
+
+          "base-100": "#FFFAF7",
+
+          "info": "#3ABFF8",
+
+          "success": "#36D399",
+
+          "warning": "#FBBD23",
+
+          "error": "#F87272",
+        },
+      },
+    ],
+  },
   plugins: [require("daisyui")],
 }

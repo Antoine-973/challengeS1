@@ -2,7 +2,7 @@
   "name": "front",
   "version": "0.0.0",
   "private": true,
-  "proxy": "http://localhost",
+  "proxy": "https://localhost",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -11,10 +11,14 @@
   },
   "dependencies": {
     "daisyui": "^2.47.0",
+    "interactjs": "^1.10.17",
+    "jwt-decode": "^3.1.2",
     "pinia": "^2.0.28",
+    "vee-validate": "^4.7.3",
     "vite-plugin-eslint": "^1.8.1",
     "vue": "^3.2.45",
-    "vue-router": "^4.1.6"
+    "vue-router": "^4.1.6",
+    "vue3-interact": "^1.0.0"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.4",
