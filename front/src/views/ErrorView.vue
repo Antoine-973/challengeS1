@@ -3,14 +3,15 @@
 
     const router = useRouter();
     const code = router.currentRoute.value.params.code;
-    const errorImgSrc = '/src/assets/images/' + code + '.jpeg';
 </script>
 
 <template>
     <main>
         <div class="grid grid-cols-12 grid-rows-1 h-screen w-full">
             <div class="col-span-6">
-                <img :src="errorImgSrc" alt="login" class="h-screen w-full object-cover">
+                <img v-if="code === '403'" src="../../public/403.jpeg" alt="login" class="h-screen w-full object-cover">
+                <img v-if="code === '404'" src="../../public/404.jpeg" alt="login" class="h-screen w-full object-cover">
+                <img v-if="code === '500'" src="../../public/500.jpeg" alt="login" class="h-screen w-full object-cover">
             </div>
             <div class="flex flex-col gap-4 col-span-6 justify-center items-center">
                 <h1 class="text-4xl text-center">Erreur {{code}}</h1>
