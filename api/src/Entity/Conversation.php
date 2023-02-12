@@ -3,30 +3,53 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
 use App\Repository\ConversationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ConversationRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['read:conversation']],
+    denormalizationContext: ['groups' => ['write:conversation']],
+)]
+#[ApiResource(
+    uriTemplate: '/users/{id}/conversations',
+    operations: [new GetCollection()],
+    uriVariables: [
+        'id' => new Link(
+            fromClass: User::class,
+            fromProperty: 'conversations',
+        )
+    ],
+    normalizationContext: ['groups' => ['read:conversation']]
+)]
+
 class Conversation
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:conversation'])]
     private ?int $id = null;
 
     #[ORM\OneToMany(mappedBy: 'conversation', targetEntity: Message::class)]
+    #[Groups('read:conversation')]
     private Collection $messages;
 
     #[ORM\ManyToOne(inversedBy: 'conversations')]
+    #[Groups(['write:conversation', 'read:conversation'])]
     private ?User $adopter = null;
 
     #[ORM\Column]
-    private ?bool $isPending = null;
+    #[Groups([ 'read:conversation'])]
+    private ?bool $isPending = false;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[Groups(['write:conversation', 'read:conversation'])]
     private ?Like $adoptionRequest = null;
 
     public function __construct()

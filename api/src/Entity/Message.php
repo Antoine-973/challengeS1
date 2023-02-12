@@ -5,9 +5,13 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\MessageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['read:message']],
+    denormalizationContext: ['groups' => ['write:message']],
+)]
 class Message
 {
     #[ORM\Id]
@@ -16,13 +20,16 @@ class Message
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:conversation','read:message','write:message'])]
     private ?string $text = null;
 
     #[ORM\ManyToOne(inversedBy: 'messages')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['read:conversation','read:message','write:message'])]
     private ?User $author = null;
 
     #[ORM\ManyToOne(inversedBy: 'messages')]
+    #[Groups(['write:message'])]
     private ?Conversation $conversation = null;
 
     public function getId(): ?int

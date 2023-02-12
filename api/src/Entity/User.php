@@ -60,13 +60,15 @@ use App\Controller\BanUserController;
     normalizationContext: ['groups' => ['user:read']],
     denormalizationContext: ['groups' => ['user:create', 'user:update']],
 )]
+
+
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity('email')]
 #[ApiFilter(SearchFilter::class, properties: ['email' => 'exact'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[Groups(['user:read', 'like:read', 'review:read'])]
+    #[Groups(['user:read', 'like:read', 'review:read','read:conversation'])]
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue]
@@ -75,7 +77,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Assert\NotBlank]
     #[Assert\Email]
-    #[Groups(['user:read', 'user:create', 'user:update','user:register:read','user:register:create', 'like:read', 'like:update'])]
+    #[Groups(['user:read', 'user:create', 'user:update','user:register:read','user:register:create', 'like:read', 'like:update', 'read:conversation'])]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
@@ -92,11 +94,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create','like:read', 'user:read', 'review:read'])]
+    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create','like:read', 'user:read', 'review:read','read:conversation','read:message'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create','like:read', 'user:read', 'review:read'])]
+    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create','like:read', 'user:read', 'review:read','read:conversation','read:message'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
