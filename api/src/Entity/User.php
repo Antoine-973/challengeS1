@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\ConfirmAccountController;
+use App\Controller\RegisterCustomController;
 use App\Controller\ResetPasswordController;
 use App\Controller\UserResetPasswordController;
 use App\Repository\UserRepository;
