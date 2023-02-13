@@ -92,6 +92,14 @@ const router = createRouter({
       }
     },
     {
+      path:'/profile',
+      name: 'profile',
+      meta: {
+        roles:['ROLE_USER']
+      },
+      component: () => import('../views/profile/UserProfileView.vue')
+    },
+    {
       path: "/back-office/reviews/:id",
       name: "rateUser",
       component: () => import('../views/RateUserBO.vue'),
