@@ -61,6 +61,22 @@ const router = createRouter({
       },
     },
     {
+      path: '/ask-reset-password',
+      name: 'askResetPassword',
+      meta: {
+        roles: ['ROLE_GUEST']
+      },
+      component: () => import('../views/security/AskResetPasswordView.vue')
+    },
+    {
+      path: '/reset-password/:token',
+      name: 'resetPassword',
+      meta : {
+        roles: ['ROLE_GUEST']
+      },
+      component: () => import('../views/security/ResetPasswordView.vue')
+    },
+    {
       path: '/back-office/likes',
       name: 'animalsLike',
       component: () => import('../views/SpaBoView.vue'),
@@ -148,7 +164,7 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   if (to.meta.roles.includes('ROLE_GUEST')) {
-    if (to.name === 'login' || to.name === 'register'){
+    if (to.name === 'login' || to.name === 'register' || to.name === 'askResetPassword' || to.name === 'resetPassword' ){
       if (localStorage.getItem('token') !== null) {
         const authStore = useAuthStore();
         const user = authStore.me();

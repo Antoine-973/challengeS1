@@ -2,11 +2,31 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use App\Controller\ResetPasswordController;
 use App\Repository\ResetPasswordRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ResetPasswordRepository::class)]
+#[ApiResource(
+    operations: [
+        new Post(
+            '/reset-password',
+            controller: ResetPasswordController::class,
+            normalizationContext: ['grouos' => 'read:reset-password'],
+            denormalizationContext: ['groups' => 'write:reset-password'],
+            read: false,
+            name: 'reset-password'
+        ),
+        new GetCollection()
+    ]
+)]
+
+
 class ResetPassword
 {
     #[ORM\Id]
@@ -21,6 +41,7 @@ class ResetPassword
     private ?\DateTimeInterface $expireAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'resetPasswords')]
+    #[Groups('write:reset-password')]
     private ?User $users = null;
 
     public function getId(): ?int
