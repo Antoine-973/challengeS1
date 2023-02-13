@@ -2,7 +2,7 @@
 import {useAuthStore} from "../../stores/auth.store";
 import {storeToRefs} from "pinia";
 import {inject, reactive, ref} from "vue";
-import {editUser} from "../../services/userService";
+import {editUser} from "../../services/UserService";
 const openSnackbar = inject('SnackbarProvider:openSnackbar');
 
 const authStore = useAuthStore();

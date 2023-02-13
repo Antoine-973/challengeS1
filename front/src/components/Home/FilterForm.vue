@@ -39,12 +39,12 @@ const speciesData = await BreedService().getSpecies();
                         <option v-for="specie in species" :key="specie.id" :value="specie.id">{{ specie.name }}</option>
                     </select>
                 </div>
-                <div class="col-span-6">
-                    <select class="select select-bordered w-full max-w-xs" v-model="selectedBreeds" @change="filterAnimals" id="breed" name="breed" multiple>
-                        <option value="" selected>Race de l'animal</option>
-                        <option v-for="breed in currentBreeds" :key="breed.id" :value="breed.id">{{ breed.name }}</option>
-                    </select>
-                </div>
+<!--                <div class="col-span-6">-->
+<!--                    <select class="select select-bordered w-full max-w-xs" v-model="selectedBreeds" @change="filterAnimals" id="breed" name="breed" multiple>-->
+<!--                        <option value="" selected>Race de l'animal</option>-->
+<!--                        <option v-for="breed in currentBreeds" :key="breed.id" :value="breed.id">{{ breed.name }}</option>-->
+<!--                    </select>-->
+<!--                </div>-->
                 <div class="col-span-6">
                     <select class="select select-bordered w-full max-w-xs" v-model="currentSex" @change="filterAnimals" id="sex" name="sex">
                         <option value="" selected>Sexe de l'animal</option>
