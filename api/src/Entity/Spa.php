@@ -47,12 +47,6 @@ class Spa
     #[ORM\OneToMany(mappedBy: 'spa', targetEntity: User::class)]
     private Collection $users;
 
-    #[ORM\OneToMany(mappedBy: 'spa', targetEntity: Agenda::class)]
-    private Collection $agendas;
-
-    #[ORM\OneToMany(mappedBy: 'spa', targetEntity: Review::class)]
-    private Collection $reviews;
-
     #[ORM\Column(length: 255)]
     private ?string $zipCode = null;
 
@@ -62,8 +56,6 @@ class Spa
     public function __construct()
     {
         $this->users = new ArrayCollection();
-        $this->agendas = new ArrayCollection();
-        $this->reviews = new ArrayCollection();
         $this->animals = new ArrayCollection();
     }
 
@@ -174,35 +166,7 @@ class Spa
         return $this;
     }
 
-    /**
-     * @return Collection<int, Agenda>
-     */
-    public function getAgendas(): Collection
-    {
-        return $this->agendas;
-    }
 
-    public function addAgenda(Agenda $agenda): self
-    {
-        if (!$this->agendas->contains($agenda)) {
-            $this->agendas->add($agenda);
-            $agenda->setSpaId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAgenda(Agenda $agenda): self
-    {
-        if ($this->agendas->removeElement($agenda)) {
-            // set the owning side to null (unless already changed)
-            if ($agenda->getSpaId() === $this) {
-                $agenda->setSpaId(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Review>

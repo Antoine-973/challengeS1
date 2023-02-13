@@ -13,7 +13,8 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\ConfirmAccountController;
-use App\Controller\RegisterCustomController;
+use App\Controller\ResetPasswordController;
+use App\Controller\UserResetPasswordController;
 use App\Repository\UserRepository;
 use App\State\UserPasswordHasher;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -33,7 +34,7 @@ use App\Controller\BanUserController;
         new Post(processor: UserPasswordHasher::class),
         new Post(
             uriTemplate: '/api/register',
-            controller: RegisterCustomController::class,
+            controller: ResetPasswordController::class,
             normalizationContext: ['groups' => 'user:register:read'],
             denormalizationContext: ['groups' => 'user:register:create'],
             name: 'registerUser',
@@ -49,6 +50,14 @@ use App\Controller\BanUserController;
         new Get(),
         new Put(processor: UserPasswordHasher::class),
         new Patch(processor: UserPasswordHasher::class),
+        new Patch(
+            uriTemplate: '/reset-password-user/{id}',
+            controller: UserResetPasswordController::class,
+            normalizationContext: ['groups' => 'user:reset-password:get'],
+            denormalizationContext: ['groups' => 'user:reset-password'],
+            read: false,
+            processor: UserPasswordHasher::class
+        ),
         new Delete(),
         new Patch(
             uriTemplate: '/api/banUser/{id}',
@@ -66,7 +75,7 @@ use App\Controller\BanUserController;
 #[ApiFilter(SearchFilter::class, properties: ['email' => 'exact'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[Groups(['user:read', 'like:read', 'review:read'])]
+    #[Groups(['user:read', 'like:read', 'review:read','user:reset-password'])]
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue]
@@ -75,7 +84,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Assert\NotBlank]
     #[Assert\Email]
-    #[Groups(['user:read', 'user:create', 'user:update','user:register:read','user:register:create', 'like:read', 'like:update'])]
+    #[Groups(['user:read', 'user:create','write:reset-password' ,'user:update','user:register:read','user:register:create', 'like:read', 'like:update'])]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
@@ -83,7 +92,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[Assert\NotBlank(groups: ['user:create'])]
-    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create'])]
+    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create','user:reset-password'])]
     private ?string $plainPassword = null;
 
     #[Groups(['user:read'])]
@@ -124,9 +133,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:confirm:read'])]
     private ?bool $isVerified = false;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $resetPassword = null;
-
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Like::class, orphanRemoval: true)]
     private Collection $likes;
 
@@ -138,12 +144,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read', 'user:update', 'like:read'])]
     private ?Spa $spa = null;
 
-    #[Groups(['user:read'])]
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Agenda::class)]
-    private Collection $agendas;
 
     #[Groups(['user:read'])]
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Review::class)]
+    #[ORM\OneToMany(mappedBy: 'spaUser', targetEntity: Review::class)]
     private Collection $reviews;
 
     #[ORM\OneToMany(mappedBy: 'users', targetEntity: ResetPassword::class)]
@@ -157,7 +160,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->likes = new ArrayCollection();
         $this->donations = new ArrayCollection();
-        $this->agendas = new ArrayCollection();
+
         $this->reviews = new ArrayCollection();
         $this->resetPasswords = new ArrayCollection();
     }
@@ -343,17 +346,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getResetPassword(): ?string
-    {
-        return $this->resetPassword;
-    }
-
-    public function setResetPassword(?string $resetPassword): self
-    {
-        $this->resetPassword = $resetPassword;
-
-        return $this;
-    }
 
     public function getSpa(): ?Spa
     {
@@ -427,35 +419,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Agenda>
-     */
-    public function getAgendas(): Collection
-    {
-        return $this->agendas;
-    }
 
-    public function addAgenda(Agenda $agenda): self
-    {
-        if (!$this->agendas->contains($agenda)) {
-            $this->agendas->add($agenda);
-            $agenda->setUser($this);
-        }
 
-        return $this;
-    }
-
-    public function removeAgenda(Agenda $agenda): self
-    {
-        if ($this->agendas->removeElement($agenda)) {
-            // set the owning side to null (unless already changed)
-            if ($agenda->getUser() === $this) {
-                $agenda->setUser(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Review>

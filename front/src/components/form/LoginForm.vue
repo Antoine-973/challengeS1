@@ -65,7 +65,7 @@ import {inject, reactive, ref} from "vue";
         </form>
         <div class="col-span-12 pr-8 text-right">
             <router-link to="/register" class="btn-link">Tu n'as pas de compte ? Créer en un!</router-link>
-            <router-link class="px-8 btn-link" to="/reset-password"  >Mot de passe oublié</router-link>
+            <router-link class="px-8 btn-link" to="/ask-reset-password"  >Mot de passe oublié</router-link>
         </div>
     </div>
 </template>
