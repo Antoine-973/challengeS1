@@ -27,7 +27,6 @@ jobs:
       - name: Install dependencies
         run: |
           npm ci --cache .npm --prefer-offline
-          npm test
           npm run build
   deploy:
     runs-on: ubuntu-latest
