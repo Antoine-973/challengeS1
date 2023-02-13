@@ -35,7 +35,7 @@ const isSubmitting = ref(false) ;
 <template>
     <div class="grid grid-cols-12 grid-rows-1 h-screen w-full">
         <div class="col-span-6">
-            <img src="src/assets/images/connexion.png" alt="login" class="h-screen w-full object-cover">
+            <img src="../../../public/connexion.png" alt="login" class="h-screen w-full object-cover">
         </div>
         <div class="flex flex-col col-span-6 justify-center justify-items-center">
             <h1 class="text-4xl text-center">Changement de mot de passe</h1>

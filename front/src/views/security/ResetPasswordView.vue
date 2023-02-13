@@ -4,7 +4,7 @@ import {inject, ref} from "vue";
 import {useRouter} from "vue-router";
 const openSnackbar = inject('SnackbarProvider:openSnackbar') ;
 const router = useRouter();
-import img from '../../../src/assets/images/connexion.png' ;
+import img from '../../../public/connexion.png' ;
 import environment from "../../environments/environment";
 
 const onSubmitMethod = async () => {
