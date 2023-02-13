@@ -39,7 +39,10 @@ const router = createRouter({
     {
       path: '/donation',
       name: 'donation',
-      component: () => import('../views/DonationView.vue')
+      component: () => import('../views/DonationView.vue'),
+      meta: {
+        roles: ['ROLE_USER']
+      },
     },
     {
       path: '/donation/success',

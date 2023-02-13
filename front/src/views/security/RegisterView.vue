@@ -1,10 +1,11 @@
 <script setup >
 
 import UserForm from "../../components/form/UserForm.vue";
+import environment from "../../environments/environment";
 const register = async (data) => {
 
     try {
-        const response = await fetch('https://localhost/api/register', {
+        const response = await fetch(environment.API_BASE_URL +'/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

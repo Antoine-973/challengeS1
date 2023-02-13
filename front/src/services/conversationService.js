@@ -1,5 +1,6 @@
 import {basePath} from "./basePath";
-const conversationPath = basePath + 'conversations'
+
+const conversationPath = basePath + '/conversations'
 
 export const createConversation = async ({adoptionRequest, adopter}) => {
 
@@ -39,7 +40,7 @@ export const getConversation =  ({id }) => {
 }
 
 export const getUserConversation = ({userId}) => {
-  return fetch(basePath + "users/" + userId + "/conversations", {
+  return fetch(basePath + "/users/" + userId + "/conversations", {
     headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer ' + localStorage.getItem('token'),

@@ -1,5 +1,5 @@
 import {basePath} from "./basePath";
-const messagePath = basePath+ 'messages' ;
+const messagePath = basePath + '/messages' ;
 
 export const createMessage =  ({text, author, conversation}) => {
   return fetch(messagePath, {

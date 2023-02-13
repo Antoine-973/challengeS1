@@ -1,12 +1,13 @@
 <script>
-import { StripeCheckout } from '@vue-stripe/vue-stripe';
+import {StripeCheckout} from '@vue-stripe/vue-stripe';
+import environment from "../environments/environment";
 
 export default {
   components: {
     StripeCheckout,
   },
   data () {
-    this.publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+    this.publishableKey = environment.STRIPE_PUBLISHABLE_KEY;
     return {
       cardDonation: [
         {
@@ -31,24 +32,24 @@ export default {
       loading: false,
       lineItemsSixty: [
         {
-          price: import.meta.env.VITE_STRIPE_PRICE_PRODUCT_SIXTY,
+          price: environment.STRIPE_PRICE_PRODUCT_SIXTY,
           quantity: 1,
         },
       ],
       lineItemsHundredTwenty: [
         {
-          price: import.meta.env.VITE_STRIP_PRICE_PRODUCT_HUNDREDTWENTY,
+          price: environment.STRIPE_PRICE_PRODUCT_HUNDREDTWENTY,
           quantity: 1,
         },
       ],
       lineItemsTwoHundred: [
         {
-          price: import.meta.env.VITE_STRIPE_PRICE_PRODUCT_TWOHUNDRED,
+          price: environment.STRIPE_PRICE_PRODUCT_TWOHUNDRED,
           quantity: 1,
         },
       ],
-      successURL: 'http://localhost:3000/donation/success',
-      cancelURL: 'http://localhost:3000/donation/error',
+      successURL: environment.URL + '/donation/success',
+      cancelURL: environment.URL +'/donation/error',
     };
   },
   methods: {
