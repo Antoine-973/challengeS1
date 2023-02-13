@@ -17,11 +17,11 @@ class Spa
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:read', 'like:read'])]
+    #[Groups(['user:read', 'like:read','read:conversation'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['animal:read'])]
+    #[Groups(['animal:read','read:conversation'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]

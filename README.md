@@ -12,6 +12,11 @@ docker compose up -d
     setfacl -R -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
     setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
 '
+
+
+docker compose exec php php bin/console d:s:u --force
+
+docker compose exec php php bin/console d:f:l
 ```
 
 # Production

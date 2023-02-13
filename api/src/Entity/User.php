@@ -57,16 +57,18 @@ use App\Controller\BanUserController;
             name: 'patchUser'
         )
     ],
-    normalizationContext: ['groups' => ['user:read']],
+    normalizationContext: ['groups' => ['user:read', 'donate:read']],
     denormalizationContext: ['groups' => ['user:create', 'user:update']],
 )]
+
+
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity('email')]
 #[ApiFilter(SearchFilter::class, properties: ['email' => 'exact'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    #[Groups(['user:read', 'like:read', 'review:read'])]
+    #[Groups(['user:read', 'like:read', 'review:read','read:conversation'])]
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue]
@@ -75,7 +77,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Assert\NotBlank]
     #[Assert\Email]
-    #[Groups(['user:read', 'user:create', 'user:update','user:register:read','user:register:create', 'like:read', 'like:update'])]
+    #[Groups(['user:read', 'user:create', 'user:update','user:register:read','user:register:create', 'like:read', 'like:update', 'read:conversation'])]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
@@ -92,11 +94,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create','like:read', 'user:read', 'review:read'])]
+    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create','like:read', 'user:read', 'review:read','read:conversation','read:message'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create','like:read', 'user:read', 'review:read'])]
+    #[Groups(['user:create', 'user:update', 'user:register:read','user:register:create','like:read', 'user:read', 'review:read','read:conversation','read:message'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -153,6 +155,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?bool $isBan = null;
 
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Message::class, orphanRemoval: true)]
+    private Collection $messages;
+
+    #[ORM\OneToMany(mappedBy: 'adopter', targetEntity: Conversation::class)]
+    private Collection $conversations;
+
     public function __construct()
     {
         $this->likes = new ArrayCollection();
@@ -160,6 +168,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->agendas = new ArrayCollection();
         $this->reviews = new ArrayCollection();
         $this->resetPasswords = new ArrayCollection();
+        $this->messages = new ArrayCollection();
+        $this->conversations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -525,6 +535,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsBan(?bool $isBan): self
     {
         $this->isBan = $isBan;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): self
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages->add($message);
+            $message->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): self
+    {
+        if ($this->messages->removeElement($message)) {
+            // set the owning side to null (unless already changed)
+            if ($message->getAuthor() === $this) {
+                $message->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Conversation>
+     */
+    public function getConversations(): Collection
+    {
+        return $this->conversations;
+    }
+
+    public function addConversation(Conversation $conversation): self
+    {
+        if (!$this->conversations->contains($conversation)) {
+            $this->conversations->add($conversation);
+            $conversation->setAdopter($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConversation(Conversation $conversation): self
+    {
+        if ($this->conversations->removeElement($conversation)) {
+            // set the owning side to null (unless already changed)
+            if ($conversation->getAdopter() === $this) {
+                $conversation->setAdopter(null);
+            }
+        }
 
         return $this;
     }

@@ -16,6 +16,7 @@ const authStore = useAuthStore();
           <ul class="menu p-4 w-80 bg-base-100 text-base-content mt-11">
             <li class="text-lg"><a href="/back-office/likes">Liste des likes</a></li>
             <li class="text-lg"><a href="/back-office/reviews">Noter un utilisateur</a></li>
+            <li class="text-lg"><a href="/back-office/conversations">Liste des conversations</a></li>
             <li class="text-lg"><router-link to="/">Retour au site</router-link></li>
           </ul>
         </div>
@@ -27,6 +28,7 @@ const authStore = useAuthStore();
           <ul class="menu p-4 w-80 bg-base-100 text-base-content mt-11">
               <li class="text-lg"><a href="/back-office/likes">Liste des likes</a></li>
               <li class="text-lg"><a href="/back-office/admin/reviews">Gestion des commentaires</a></li>
+              <li class="text-lg"><a href="/back-office/conversations">Liste des conversations</a></li>
               <li class="text-lg"><router-link to="/">Retour au site</router-link></li>
           </ul>
         </div>

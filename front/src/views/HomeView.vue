@@ -22,11 +22,14 @@ import FilterForm from "../components/Home/FilterForm.vue";
                     <ProfileCard />
                 </Suspense>
                 <div class="flex flex-row justify-center gap-5 w-full">
-                    <div><h6 class="text-primary">Non</h6></div>
-                    <div><h6 class="text-primary">Like</h6></div>
-                    <div><h6 class="text-primary">Ouvrir le profil</h6></div>
-                    <div><h6 class="text-primary">Photo Suivante</h6></div>
+                    <div>Non</div>
+                    <div>Like</div>
+                    <div>Ouvrir le profil</div>
+                    <div>Photo Suivante</div>
                 </div>
+            </div>
+            <div class="absolute bottom-5 right-5">
+                <a href="donation"><button class="btn btn-primary">Faire un don</button></a>
             </div>
         </div>
       </div>
