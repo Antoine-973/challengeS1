@@ -2,6 +2,7 @@
 
 import {onMounted, ref} from "vue";
 import {useRouter} from "vue-router";
+import environment from "../../environments/environment";
 
 // const data =  window.location.href.split('/').pop().split('?')[1].split('&').reduce((acc, item) => {
 //     const [key, value] = item.split('=');
@@ -18,7 +19,7 @@ const isPending = ref(true);
 const sec = ref(5);
 
 const verifyUser = async () => {
-    const response = await fetch('https://localhost/api/confirm', {
+    const response = await fetch(environment.API_BASE_URL + '/confirm', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

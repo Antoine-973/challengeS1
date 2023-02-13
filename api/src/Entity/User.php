@@ -33,7 +33,7 @@ use App\Controller\BanUserController;
         new GetCollection(),
         new Post(processor: UserPasswordHasher::class),
         new Post(
-            uriTemplate: '/api/register',
+            uriTemplate: '/register',
             controller: ResetPasswordController::class,
             normalizationContext: ['groups' => 'user:register:read'],
             denormalizationContext: ['groups' => 'user:register:create'],
@@ -41,7 +41,7 @@ use App\Controller\BanUserController;
             processor: UserPasswordHasher::class,
         ),
         new Post(
-            uriTemplate: '/api/confirm',
+            uriTemplate: '/confirm',
             controller: ConfirmAccountController::class,
             denormalizationContext: ['groups' => 'user:confirm:account:patch'],
             read: false,
@@ -60,7 +60,7 @@ use App\Controller\BanUserController;
         ),
         new Delete(),
         new Patch(
-            uriTemplate: '/api/banUser/{id}',
+            uriTemplate: '/banUser/{id}',
             controller: BanUserController::class,
             read: false,
             name: 'patchUser'
