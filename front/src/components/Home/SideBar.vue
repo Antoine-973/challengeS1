@@ -51,9 +51,9 @@ onBeforeMount(async () => {
             <ul class="menu bg-base-100 w-full">
                 <template v-for="conversation in conversations">
                    <li>
-                       <router-link :to="'/conversations/'+conversation.id">
+                       <a :href="'/conversations/'+conversation.id">
                            {{conversation.adoptionRequest.animal.name}} - {{conversation.adoptionRequest.animal.spa.name}}
-                       </router-link>
+                       </a>
                    </li>
                 </template>
             </ul>
