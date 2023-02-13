@@ -37,7 +37,7 @@ const onSubmitMethod = async (data) => {
             <img src="../../../public/connexion.png" alt="login" class="h-screen w-full object-cover">
         </div>
         <div class="flex flex-col col-span-6 justify-center justify-items-center">
-            <h1 class="text-4xl text-center">Connexion Spadoption</h1>
+            <h1 class="text-4xl text-center">Connexion</h1>
             <LoginForm :submit="onSubmitMethod" />
         </div>
     </div>
