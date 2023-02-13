@@ -5,7 +5,7 @@ const API_URL = environment.API_BASE_URL + '/likes';
 const LikeService = () => {
 
   const createLike = (userId, animalId) => {
-    return fetch( API_URL + '/likes',
+    return fetch( API_URL,
       {
         method: 'POST',
         headers: {
