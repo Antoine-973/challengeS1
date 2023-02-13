@@ -27,7 +27,6 @@ onBeforeMount(async () => {
                 <table class="table w-5/6 mt-12 justify-center">
                     <thead>
                         <tr>
-                            <th></th>
                             <th>Nom</th>
                             <th>Prénom</th>
                             <th>Noter l'utilisateur</th>
@@ -35,7 +34,6 @@ onBeforeMount(async () => {
                     </thead>
                     <tbody>
                         <tr v-if="likes" v-for="like in likes">
-                            <th>1</th>
                             <td>{{ like.user.lastname }}</td>
                             <td>{{ like.user.firstname }}</td>
                             <td><a :href="'/back-office/reviews/' + like.user.id"><i class="fas fa-pen"></i></a></td>
