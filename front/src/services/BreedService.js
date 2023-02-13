@@ -1,10 +1,8 @@
-import {basePath} from "./basePath";
-
-const API_URL = basePath + '/species';
+import environment from "../environments/environment";
 
 const SpeciesService = () => {
   const getSpecies = () => {
-      return fetch(API_URL,
+      return fetch(environment.API_BASE_URL + '/species',
           {
               method: 'GET',
               headers: {

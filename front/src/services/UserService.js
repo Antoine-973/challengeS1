@@ -1,13 +1,11 @@
 import jwtDecode from "jwt-decode";
-import {basePath} from "./basePath";
-
-const API_URL = basePath + '/users';
+import environment from "../environments/environment";
 
 const getUser = async () => {
   const token = localStorage.getItem('token');
   const id = jwtDecode(token).id;
 
-  return fetch(API_URL + '/' + id,
+  return fetch(environment.API_BASE_URL + '/users/' + id,
     {
       method: 'GET',
       headers: {
@@ -27,6 +25,18 @@ const getUser = async () => {
 
 const logout = async () => {
   localStorage.removeItem('token');
+}
+
+export const editUser = async (user) => {
+  return fetch(environment.API_BASE_URL + '/users/' + user.id,{
+    method: 'PATCH',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('token'),
+    },
+    body: JSON.stringify(user)
+  }).then(response => response.json()).then(data => data) ;
 }
 
 const UserService = {

@@ -1,10 +1,11 @@
-import {basePath} from "./basePath";
-const API_URL = basePath + '/likes';
+import environment from "../environments/environment";
+
+const API_URL = environment.API_BASE_URL + '/likes';
 
 const LikeService = () => {
 
   const createLike = (userId, animalId) => {
-    return fetch(API_URL,
+    return fetch( + '/likes',
       {
         method: 'POST',
         headers: {
@@ -41,7 +42,7 @@ const LikeService = () => {
   }
 
    const patchAcceptLikes = async (id, emailUser) => {
-    return await fetch('https://localhost/acceptlikes/' + id, {
+    return await fetch(API_URL + '/acceptlikes/' + id, {
       method: 'PATCH',
       headers: {
         "Content-Type": "application/merge-patch+json",

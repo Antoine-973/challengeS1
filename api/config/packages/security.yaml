@@ -36,3 +36,4 @@ security:
         - { path: ^/register, roles: PUBLIC_ACCESS }
         - { path: ^/confirm, roles: PUBLIC_ACCESS }
         - { path: ^/users, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/reset-password-user, roles: PUBLIC_ACCESS }

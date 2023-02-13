@@ -1,6 +1,6 @@
-import {basePath} from "./basePath";
+import environment from "../environments/environment";
 
-const API_URL = basePath + '/animals/not_liked';
+const API_URL = environment.API_BASE_URL + '/animals/not_liked';
 
 const AnimalService = () => {
   const getAnimals = () => {
