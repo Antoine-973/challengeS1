@@ -1,9 +1,21 @@
 <script setup>
 import {useAuthStore} from "../../stores/auth.store";
 import {storeToRefs} from "pinia";
+import {useRouter} from "vue-router";
+import {onBeforeMount,ref} from "vue";
+import {getUserConversation} from "../../services/conversationService";
+
+const router = useRouter() ;
 
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
+
+const conversations = ref(null) ;
+onBeforeMount(async () => {
+    conversations.value = await getUserConversation({userId: user.value.id}) ;
+}) ;
+
+
 </script>
 
 <template>
@@ -30,10 +42,22 @@ const { user } = storeToRefs(authStore);
                 </div>
                 <div class="text-white col-span-10 text-lg font-bold">{{user.firstname}} {{user.lastname}}</div>
             </div>
-            <div class="grid grid-cols-12 grid-rows-1 btn-group">
-                <button class="btn btn-ghost col-span-6 text-secondary hover:bg-transparent link-hover">Conversations</button>
-                <button class="btn btn-ghost col-span-6 text-secondary hover:bg-transparent link-hover">En attente</button>
+
+            <div class="grid grid-cols-12 ">
+                <button @click="router.push('/')" class="btn btn-ghost col-span-12 text-secondary hover:bg-transparent link-hover">Voir les animaux</button>
             </div>
+
+            <span class="  text-secondary ">Conversations</span>
+            <ul class="menu bg-base-100 w-full">
+                <template v-for="conversation in conversations">
+                   <li>
+                       <router-link :to="'/conversations/'+conversation.id">
+                           {{conversation.adoptionRequest.animal.name}} - {{conversation.adoptionRequest.animal.spa.name}}
+                       </router-link>
+                   </li>
+                </template>
+            </ul>
+
         </div>
     </main>
 </template>

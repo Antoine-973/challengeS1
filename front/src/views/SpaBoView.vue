@@ -4,6 +4,7 @@ import Menu from "../components/TemplateBO.vue";
 import {useAuthStore} from "../stores/auth.store";
 import {storeToRefs} from "pinia";
 import LikeService from "../services/LikeService";
+import {createConversation} from "../services/conversationService";
 const data = ref(null);
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
@@ -24,8 +25,12 @@ onMounted(async () => {
 })
 
 const patchAcceptLike = async(id, user) => {
-  const responsePatchLike = await LikeService().patchAcceptLikes(id, user);
+  const responsePatchLike = await LikeService().patchAcceptLikes(id, user.email);
   const likePatch = await responsePatchLike.json();
+  await createConversation({
+      adoptionRequest:id,
+      adopter:user.id
+  }) ;
   window.location.href = "/back-office/likes";
   updateLike(id);
 }
@@ -94,7 +99,7 @@ const updateLike = (id) => {
                     </div>
                       <p class="text-warning"><strong>Cette action est irreversible.</strong></p>
                     <div class="modal-action">
-                      <button @click="patchAcceptLike(like.id, like.user.email)" class="btn">Accepter</button>
+                      <button @click="patchAcceptLike(like.id, like.user)" class="btn">Accepter</button>
                       <label :for="'accept' + like.id" class="btn">Annuler</label>
                     </div>
                   </div>

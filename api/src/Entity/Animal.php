@@ -47,7 +47,7 @@ class Animal
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['animal:read', 'like:read', 'animal:create', 'animal:update'])]
+    #[Groups(['animal:read', 'like:read', 'animal:create', 'animal:update','read:conversation'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
@@ -59,7 +59,7 @@ class Animal
     private ?string $birthLocation = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['like:read', 'animal:read'])]
+    #[Groups(['like:read', 'animal:read','read:conversation'])]
     private ?string $description = null;
 
     #[ORM\Column]
@@ -84,7 +84,7 @@ class Animal
     private Collection $breeds;
 
     #[ORM\ManyToOne(inversedBy: 'animals')]
-    #[Groups(['like:read', 'animal:read'])]
+    #[Groups(['like:read', 'animal:read', 'read:conversation'])]
     private ?Spa $spa = null;
 
     #[ORM\ManyToMany(targetEntity: Behaviour::class, inversedBy: 'animals')]

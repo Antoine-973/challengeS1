@@ -74,12 +74,12 @@ class Like
 
     #[ORM\ManyToOne(inversedBy: 'likes')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['like:read', 'like:create', 'like:update'])]
+    #[Groups(['like:read', 'like:create', 'like:update','read:conversation'])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'likes')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['like:read', 'like:create', 'like:update'])]
+    #[Groups(['like:read', 'like:create', 'like:update','read:conversation'])]
     private ?Animal $animal = null;
 
     public function getId(): ?int

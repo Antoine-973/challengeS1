@@ -13,6 +13,30 @@ const router = createRouter({
       component: () => import('../views/HomeView.vue')
     },
     {
+      path: '/conversations/:id',
+      name : 'conversations',
+      meta: {
+        roles: ['ROLE_USER']
+      },
+      component: () => import('../views/Chat/adopter/AdopterConversationView.vue')
+    },
+    {
+      path:'/back-office/conversations/:id',
+      name:'back-office-conversationId',
+      meta: {
+        roles:['ROLE_SPA']
+      },
+      component: () => import('../views/Chat/adopter/SpaConversationView.vue')
+    },
+    {
+      path:'/back-office/conversations',
+      name:'back-office-conversations',
+      meta: {
+        roles:['ROLE_SPA']
+      },
+      component: () => import('../views/Chat/adopter/SpaConversationList.vue')
+    },
+    {
       path: '/back-office/likes',
       name: 'animalsLike',
       component: () => import('../views/SpaBoView.vue'),
