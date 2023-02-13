@@ -33,7 +33,7 @@ use App\Controller\LikesController;
         new Post(),
         new Delete(),
         new Patch(
-            uriTemplate: '/acceptlikes/{id}',
+            uriTemplate: '/likes/acceptlikes/{id}',
             controller: AcceptLikeUserCustomController::class,
             normalizationContext: ['groups' => 'like:read'],
             denormalizationContext: ['groups' => 'like:update'],
