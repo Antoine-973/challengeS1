@@ -5,12 +5,13 @@ import {useRouter} from "vue-router";
 const openSnackbar = inject('SnackbarProvider:openSnackbar') ;
 const router = useRouter();
 import img from '../../../src/assets/images/connexion.png' ;
+import environment from "../../environments/environment";
 
 const onSubmitMethod = async () => {
     isSubmitting.value = true ;
     try {
         if(password.value === confirmPassword.value) {
-            const response = await fetch('https://localhost/reset_passwords');
+            const response = await fetch(environment.API_BASE_URL + '/reset_passwords');
             const data = await response.json();
             const token = router.currentRoute.value.params.token ;
             let user  ;
@@ -19,7 +20,7 @@ const onSubmitMethod = async () => {
                     user = reset.users ;
             }
 
-            await fetch('https://localhost/reset-password-user/' +user.split('/')[2] , {
+            await fetch(environment.API_BASE_URL + '/reset-password-user/' +user.split('/')[2] , {
                 method:'PATCH',
                 headers: {
                     'Content-Type': 'application/merge-patch+json',

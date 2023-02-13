@@ -1,9 +1,9 @@
-const API_URL = 'https://localhost/likes';
+import environment from "../environments/environment";
 
 const LikeService = () => {
 
   const createLike = (userId, animalId) => {
-    return fetch(API_URL,
+    return fetch(environment.API_BASE_URL + '/likes',
       {
         method: 'POST',
         headers: {
@@ -18,7 +18,7 @@ const LikeService = () => {
   }
 
    const getLikes = async (url='') => {
-    return fetch(API_URL + '?' + url, {
+    return fetch(environment.API_BASE_URL + '?' + url, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -29,7 +29,7 @@ const LikeService = () => {
   };
 
    const getLike = async (id) => {
-    return fetch(API_URL + '/' + id, {
+    return fetch(environment.API_BASE_URL + '/' + id, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -40,7 +40,7 @@ const LikeService = () => {
   }
 
    const patchAcceptLikes = async (id, emailUser) => {
-    return await fetch('https://localhost/acceptlikes/' + id, {
+    return await fetch(environment.API_BASE_URL + '/acceptlikes/' + id, {
       method: 'PATCH',
       headers: {
         "Content-Type": "application/merge-patch+json",
@@ -54,7 +54,7 @@ const LikeService = () => {
   }
 
    const patchRejectLikes = async (id, emailUser) => {
-    return await fetch(API_URL + '/' + id, {
+    return await fetch(environment.API_BASE_URL + '/' + id, {
       method: 'PATCH',
       headers: {
         "Content-Type": "application/merge-patch+json",
