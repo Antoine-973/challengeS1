@@ -28,6 +28,18 @@ const logout = async () => {
   localStorage.removeItem('token');
 }
 
+export const editUser = async (user) => {
+  return fetch(API_URL + '/' + user.id,{
+    method: 'PATCH',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('token'),
+    },
+    body: JSON.stringify(user)
+  }).then(response => response.json()).then(data => data) ;
+}
+
 const UserService = {
   getUser,
   logout
