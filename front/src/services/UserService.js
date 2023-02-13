@@ -1,12 +1,11 @@
 import jwtDecode from "jwt-decode";
-
-const API_URL = 'https://localhost/users';
+import environment from "../environments/environment";
 
 const getUser = async () => {
   const token = localStorage.getItem('token');
   const id = jwtDecode(token).id;
 
-  return fetch(API_URL + '/' + id,
+  return fetch(environment.API_BASE_URL + '/users/' + id,
     {
       method: 'GET',
       headers: {
@@ -29,7 +28,7 @@ const logout = async () => {
 }
 
 export const editUser = async (user) => {
-  return fetch(API_URL + '/' + user.id,{
+  return fetch(environment.API_BASE_URL + '/users/' + user.id,{
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/merge-patch+json',

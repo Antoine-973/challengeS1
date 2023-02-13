@@ -1,12 +1,13 @@
 <script setup>
 
 import {inject, ref} from "vue";
+import environment from "../../environments/environment";
 const openSnackbar = inject('SnackbarProvider:openSnackbar') ;
 
 const onSubmitMethod = async () => {
     isSubmitting.value = true ;
     try {
-        const response = await fetch('https://localhost/reset-password', {
+        const response = await fetch(environment.API_BASE_URL+ '/reset-password', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

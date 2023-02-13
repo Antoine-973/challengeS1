@@ -1,4 +1,6 @@
-const API_URL = 'https://localhost/animals/not_liked';
+import environment from "../environments/environment";
+
+const API_URL = environment.API_BASE_URL + '/animals/not_liked';
 
 const AnimalService = () => {
   const getAnimals = () => {

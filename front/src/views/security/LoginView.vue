@@ -2,6 +2,7 @@
 import {inject} from "vue";
 import LoginForm from "../../components/form/LoginForm.vue";
 import {useAuthStore} from "../../stores/auth.store";
+import environment from "../../environments/environment";
 
 const authStore = useAuthStore();
 const openSnackbar = inject('SnackbarProvider:openSnackbar');
@@ -9,7 +10,7 @@ const openSnackbar = inject('SnackbarProvider:openSnackbar');
 const onSubmitMethod = async (data) => {
 
         try {
-            const response = await fetch('https://localhost/auth', {
+            const response = await fetch(environment.API_BASE_URL + '/auth', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
