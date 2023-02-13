@@ -57,7 +57,7 @@ use App\Controller\BanUserController;
             name: 'patchUser'
         )
     ],
-    normalizationContext: ['groups' => ['user:read']],
+    normalizationContext: ['groups' => ['user:read', 'donate:read']],
     denormalizationContext: ['groups' => ['user:create', 'user:update']],
 )]
 

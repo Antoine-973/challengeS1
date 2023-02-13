@@ -37,6 +37,35 @@ const router = createRouter({
       component: () => import('../views/Chat/adopter/SpaConversationList.vue')
     },
     {
+      path: '/donation',
+      name: 'donation',
+      component: () => import('../views/DonationView.vue')
+    },
+    {
+      path: '/donation/success',
+      name: 'donationSuccess',
+      component: () => import('../views/SuccessView.vue'),
+      meta: {
+        roles: ['ROLE_USER']
+      },
+    },
+    {
+      path: '/donation/error',
+      name: 'donationError',
+      component: () => import('../views/ErrorView.vue'),
+      meta: {
+        roles: ['ROLE_USER']
+      },
+    },
+    {
+      path: '/AllAnimalsLike',
+      name: 'animalsLike',
+      component: () => import('../views/SpaBoView.vue'),
+      meta: {
+        roles: ['ROLE_SPA']
+      },
+    },
+    {
       path: '/back-office/likes',
       name: 'animalsLike',
       component: () => import('../views/SpaBoView.vue'),
@@ -67,14 +96,6 @@ const router = createRouter({
         roles: ['ROLE_GUEST']
       },
       component: () => import("../views/security/LoginView.vue"),
-    },
-    {
-      name: "error",
-      path: "/error/:code",
-      meta: {
-        roles: ['ROLE_GUEST']
-      },
-      component: () => import("../views/ErrorView.vue"),
     },
     {
       name:"logout",
