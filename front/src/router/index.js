@@ -55,17 +55,9 @@ const router = createRouter({
     {
       path: '/donation/error',
       name: 'donationError',
-      component: () => import('../views/ErrorView.vue'),
+      component: () => import('../views/DonationErrorView.vue'),
       meta: {
         roles: ['ROLE_USER']
-      },
-    },
-    {
-      path: '/AllAnimalsLike',
-      name: 'animalsLike',
-      component: () => import('../views/SpaBoView.vue'),
-      meta: {
-        roles: ['ROLE_SPA']
       },
     },
     {
